@@ -2,12 +2,12 @@
 //  DrinkThumbnail.swift
 //  BobaLoyalty
 //
-//  奶茶缩略图：Assets/Drinks/ 下的真实照片（Unsplash CC0 免费可商用）
-//  全 App 通用：菜单卡 / 购物车行 / 订单记录 / 详情页缩略图
+//  Drink thumbnail: real photos under Assets/Drinks/ (Unsplash CC0, free for commercial use).
+//  Shared across the App: menu cards, cart rows, order history rows, detail-page thumbnails.
 //
-//  ImageSet 与同名 ColorSet（DrinkColors/）共存：
-//  - Image(imageName) 拿照片
-//  - Color(imageName) 拿底色，作为图片加载前/失败时的兜底
+//  An ImageSet and a same-named ColorSet (DrinkColors/) coexist:
+//  - `Image(imageName)` returns the photo
+//  - `Color(imageName)` returns the base color, used as a fallback before / if the image fails to load
 //
 
 import SwiftUI

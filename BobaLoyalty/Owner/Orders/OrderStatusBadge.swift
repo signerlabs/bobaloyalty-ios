@@ -2,12 +2,12 @@
 //  OrderStatusBadge.swift
 //  BobaLoyalty
 //
-//  订单状态徽章：根据 OrderStatus 渲染胶囊形彩色 Badge。
-//  - pending  → 橙
-//  - making   → 蓝
-//  - ready    → 绿
-//  - completed → 灰
-//  - cancelled → 红
+//  Order status badge: renders a capsule-shaped colored badge based on OrderStatus.
+//  - pending   → orange
+//  - making    → blue
+//  - ready     → green
+//  - completed → gray
+//  - cancelled → red
 //
 
 import SwiftUI
@@ -30,7 +30,7 @@ struct OrderStatusBadge: View {
             )
     }
 
-    // MARK: - 颜色映射
+    // MARK: - Color mapping
 
     private var backgroundColor: Color {
         switch status {

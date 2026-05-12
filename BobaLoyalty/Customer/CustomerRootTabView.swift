@@ -56,7 +56,7 @@ struct CustomerRootTabView: View {
                 .environment(\.symbolVariants, .none)
             }
 
-            // MARK: 我的
+            // MARK: Profile
             Tab(value: "profile") {
                 NavigationStack { ProfileView() }
             } label: {

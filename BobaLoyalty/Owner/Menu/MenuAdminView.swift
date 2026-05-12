@@ -2,10 +2,10 @@
 //  MenuAdminView.swift
 //  BobaLoyalty
 //
-//  老板端 Tab 2：菜单管理
-//  - 顶部 SWSearchBar 搜索（按商品名）
-//  - 商品列表：thumbnail + 名称 + 价格 + 上下架开关
-//  - 右上 "+" 新增；点击行编辑；左滑删除（带二次确认）
+//  Owner-side Tab 2: menu admin.
+//  - Top SWSearchBar (searches by product name)
+//  - Product list: thumbnail + name + price + listing toggle
+//  - Top-right "+" creates a new product; tap a row to edit; swipe-to-delete with a confirmation
 //
 
 import SwiftUI
@@ -22,7 +22,7 @@ struct MenuAdminView: View {
     @State private var editingProduct: Product?
     @State private var pendingDelete: Product?
 
-    // MARK: - 过滤
+    // MARK: - Filtering
 
     private var filteredProducts: [Product] {
         let trimmed = searchText.trimmingCharacters(in: .whitespaces)
@@ -35,13 +35,13 @@ struct MenuAdminView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // 搜索栏
+            // Search bar
             SWSearchBar(text: $searchText, placeholder: "搜索商品名 / 分类")
                 .padding(.horizontal)
                 .padding(.top, 8)
                 .padding(.bottom, 6)
 
-            // 列表
+            // List
             List {
                 ForEach(filteredProducts) { product in
                     productRow(product)
@@ -74,15 +74,15 @@ struct MenuAdminView: View {
                 }
             }
         }
-        // 新增 sheet
+        // Create sheet
         .sheet(isPresented: $showingNewSheet) {
             ProductEditView(existing: nil)
         }
-        // 编辑 sheet
+        // Edit sheet
         .sheet(item: $editingProduct) { product in
             ProductEditView(existing: product)
         }
-        // 删除二次确认
+        // Delete confirmation
         .alert("删除商品", isPresented: Binding(
             get: { pendingDelete != nil },
             set: { if !$0 { pendingDelete = nil } }
@@ -102,12 +102,12 @@ struct MenuAdminView: View {
         }
     }
 
-    // MARK: - 单行
+    // MARK: - Single row
 
     @ViewBuilder
     private func productRow(_ product: Product) -> some View {
         HStack(spacing: 12) {
-            // 圆形占位色 + SF Symbol
+            // Circular color placeholder + SF Symbol
             ZStack {
                 Circle()
                     .fill(Color(product.imageName))
@@ -141,7 +141,7 @@ struct MenuAdminView: View {
 
             Spacer()
 
-            // 上架开关：直接绑定 SwiftData 字段，autosave 生效
+            // Listing toggle: binds directly to the SwiftData field so autosave kicks in
             Toggle("上架", isOn: Binding(
                 get: { product.isOnSale },
                 set: { product.isOnSale = $0 }

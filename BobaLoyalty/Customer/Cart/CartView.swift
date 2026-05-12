@@ -2,8 +2,9 @@
 //  CartView.swift
 //  BobaLoyalty
 //
-//  顾客端购物车：列出 @Query var cartItems，左滑删除 + SWStepper 数量调整
-//  底部固定栏：合计金额 + "去结算"按钮 → push CheckoutView
+//  Customer-side cart: lists `@Query var cartItems` with swipe-to-delete and
+//  SWStepper-based quantity adjustment. A pinned bottom bar shows the total
+//  amount plus a "Checkout" button that pushes CheckoutView.
 //
 
 import SwiftUI
@@ -13,12 +14,12 @@ struct CartView: View {
     @Query(sort: \CartItem.addedAt, order: .reverse) private var cartItems: [CartItem]
     @Environment(\.modelContext) private var modelContext
 
-    /// 购物车合计
+    /// Cart total
     private var totalAmount: Double {
         cartItems.reduce(0.0) { $0 + $1.lineTotal }
     }
 
-    /// 总杯数
+    /// Total cup count
     private var totalCups: Int {
         cartItems.reduce(0) { $0 + $1.quantity }
     }
@@ -47,7 +48,7 @@ struct CartView: View {
         }
     }
 
-    // MARK: - 空状态
+    // MARK: - Empty state
 
     private var emptyState: some View {
         ContentUnavailableView {
@@ -57,7 +58,7 @@ struct CartView: View {
         }
     }
 
-    // MARK: - 列表
+    // MARK: - List
 
     private var cartList: some View {
         List {
@@ -73,7 +74,7 @@ struct CartView: View {
         .scrollContentBackground(.hidden)
     }
 
-    // MARK: - 底部结算栏
+    // MARK: - Bottom checkout bar
 
     private var checkoutBar: some View {
         HStack(spacing: 12) {
@@ -111,7 +112,7 @@ struct CartView: View {
         .background(.ultraThinMaterial)
     }
 
-    // MARK: - 删除
+    // MARK: - Delete
 
     private func deleteItems(at offsets: IndexSet) {
         for index in offsets {
@@ -121,7 +122,7 @@ struct CartView: View {
     }
 }
 
-// MARK: - 购物车行
+// MARK: - Cart row
 
 private struct CartRow: View {
     @Bindable var item: CartItem

@@ -2,10 +2,10 @@
 //  OrdersBoardView.swift
 //  BobaLoyalty
 //
-//  老板端 Tab 1：订单实时流
-//  - 顶部 3 张状态卡：今日订单数 / 今日营收 / 待处理订单数
-//  - 待处理订单数 > 0 时数字红色 + bounce 动画（"叮"声效感）
-//  - 下方按时间倒序的订单列表，点击 push 到 OrderDetailView
+//  Owner-side Tab 1: live order stream.
+//  - 3 status cards up top: today's order count / today's revenue / pending count
+//  - When pending count > 0, the number is red with a bounce animation (a "ding" feel)
+//  - Below: reverse-chronological order list; tapping a row pushes OrderDetailView
 //
 
 import SwiftUI
@@ -14,11 +14,11 @@ import SwiftData
 struct OrdersBoardView: View {
     @Environment(\.modelContext) private var modelContext
 
-    /// 全部订单按时间倒序
+    /// All orders, reverse-chronological
     @Query(sort: \Order.createdAt, order: .reverse)
     private var orders: [Order]
 
-    // MARK: - 计算
+    // MARK: - Computed
 
     private var todayStartOfDay: Date {
         Calendar.current.startOfDay(for: .now)
@@ -41,10 +41,10 @@ struct OrdersBoardView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
-                // MARK: 顶部状态卡
+                // MARK: Top status cards
                 statsRow
 
-                // MARK: 订单列表
+                // MARK: Order list
                 ordersList
             }
             .padding(.vertical, 12)
@@ -52,12 +52,12 @@ struct OrdersBoardView: View {
         .background(Color("BobaCream").ignoresSafeArea())
         .navigationTitle("订单")
         .onAppear {
-            // 没有今日活跃订单时注入演示数据，让视频录屏有戏可看
+            // Inject demo data when today has no active orders, so the demo recording has action
             OwnerActiveOrderSeed.seedTodayActiveOrdersIfNeeded(in: modelContext)
         }
     }
 
-    // MARK: - 顶部统计行
+    // MARK: - Top stats row
 
     private var statsRow: some View {
         HStack(spacing: 12) {
@@ -122,7 +122,7 @@ struct OrdersBoardView: View {
         )
     }
 
-    // MARK: - 订单列表
+    // MARK: - Order list
 
     private var ordersList: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -170,7 +170,7 @@ struct OrdersBoardView: View {
         }
     }
 
-    /// 不同状态订单的边框轻微染色，提升可读性
+    /// Tint the row's border based on order status for better scannability
     private func rowAccent(_ order: Order) -> Color {
         switch order.status {
         case .pending:   .orange

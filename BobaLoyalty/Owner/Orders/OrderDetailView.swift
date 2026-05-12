@@ -2,8 +2,9 @@
 //  OrderDetailView.swift
 //  BobaLoyalty
 //
-//  订单详情：每杯明细 + 状态流转按钮（开始制作 / 出餐完成 / 顾客已取）
-//  状态机：pending → making → ready → completed
+//  Order details: per-cup line items + status-transition button
+//  (Start preparing / Ready / Picked up).
+//  Status machine: pending → making → ready → completed.
 //
 
 import SwiftUI
@@ -17,10 +18,10 @@ struct OrderDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                // MARK: 头部信息卡
+                // MARK: Header info card
                 headerCard
 
-                // MARK: 商品明细
+                // MARK: Item details
                 VStack(alignment: .leading, spacing: 12) {
                     Text("商品明细")
                         .font(.headline)
@@ -44,10 +45,10 @@ struct OrderDetailView: View {
                     )
                 }
 
-                // MARK: 合计
+                // MARK: Summary
                 summaryCard
 
-                // MARK: 状态流转按钮
+                // MARK: Status transition button
                 actionButtons
             }
             .padding()
@@ -57,7 +58,7 @@ struct OrderDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 
-    // MARK: - 头部卡
+    // MARK: - Header card
 
     private var headerCard: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -84,12 +85,12 @@ struct OrderDetailView: View {
         )
     }
 
-    // MARK: - 单杯明细行
+    // MARK: - Single cup line row
 
     @ViewBuilder
     private func orderLineRow(_ line: OrderLine) -> some View {
         HStack(spacing: 12) {
-            // 占位色圆形 + SF Symbol
+            // Circular color placeholder + SF Symbol
             ZStack {
                 Circle()
                     .fill(Color(line.imageName))
@@ -134,7 +135,7 @@ struct OrderDetailView: View {
         .padding(.horizontal, 12)
     }
 
-    // MARK: - 合计卡
+    // MARK: - Summary card
 
     private var summaryCard: some View {
         VStack(spacing: 10) {
@@ -173,7 +174,7 @@ struct OrderDetailView: View {
         )
     }
 
-    // MARK: - 状态流转按钮
+    // MARK: - Status transition button
 
     @ViewBuilder
     private var actionButtons: some View {
@@ -230,7 +231,7 @@ struct OrderDetailView: View {
         }
     }
 
-    // MARK: - 状态推进
+    // MARK: - Status advancement
 
     private func advance(to next: OrderStatus, message: String) {
         withAnimation(.spring(duration: 0.4)) {

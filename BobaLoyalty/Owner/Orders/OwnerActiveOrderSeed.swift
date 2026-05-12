@@ -2,11 +2,12 @@
 //  OwnerActiveOrderSeed.swift
 //  BobaLoyalty
 //
-//  老板端 Tab 1 专用：在没有任何"今日活跃订单"时，注入若干 pending/making/ready
-//  状态订单，让视频录屏时订单流的状态切换演示更有戏。
+//  Specific to owner-side Tab 1: injects pending/making/ready orders when there
+//  are no "active orders today", so the order-flow status transitions look lively
+//  during demo recordings.
 //
-//  与 MockSeed 互不干扰：MockSeed 只灌历史 30 天的 completed 订单；本文件只补
-//  当天的活跃订单（不重复创建）。
+//  Independent of MockSeed: MockSeed only seeds 30 days of historical completed
+//  orders; this file only fills in today's active orders (and never duplicates).
 //
 
 import Foundation
@@ -15,7 +16,7 @@ import SwiftData
 @MainActor
 enum OwnerActiveOrderSeed {
 
-    /// 检测今日是否有活跃订单（pending/making/ready），没有则注入演示数据
+    /// Check whether there are any active orders today (pending/making/ready); if not, inject demo data
     static func seedTodayActiveOrdersIfNeeded(in context: ModelContext) {
         do {
             let products = try context.fetch(FetchDescriptor<Product>())
@@ -24,7 +25,7 @@ enum OwnerActiveOrderSeed {
             let customers = try context.fetch(FetchDescriptor<Customer>())
             guard let customer = customers.first else { return }
 
-            // 检测当天是否已有 active 订单（避免每次进 Tab 都重复灌）
+            // Check whether any active order already exists today (so we don't re-seed every time the tab opens)
             let calendar = Calendar.current
             let startOfToday = calendar.startOfDay(for: .now)
             let allOrders = try context.fetch(FetchDescriptor<Order>())
@@ -34,7 +35,7 @@ enum OwnerActiveOrderSeed {
             }
             guard !hasTodayActive else { return }
 
-            // 注入 4 张今日活跃订单：2 pending + 1 making + 1 ready
+            // Inject 4 active orders for today: 2 pending + 1 making + 1 ready
             let demoOrders = buildDemoActiveOrders(
                 products: products,
                 customer: customer,
@@ -46,11 +47,11 @@ enum OwnerActiveOrderSeed {
 
             try context.save()
         } catch {
-            print("[OwnerActiveOrderSeed] 注入失败：\(error)")
+            print("[OwnerActiveOrderSeed] Injection failed: \(error)")
         }
     }
 
-    // MARK: - 演示数据生成
+    // MARK: - Demo data generation
 
     private static func buildDemoActiveOrders(
         products: [Product],
@@ -60,7 +61,7 @@ enum OwnerActiveOrderSeed {
         let calendar = Calendar.current
         let addonChoices = ["珍珠", "椰果", "布丁", "芋圆"]
 
-        // 4 张订单，时间从 18 分钟前 → 2 分钟前依次推进
+        // 4 orders, with timestamps progressing from 18 minutes ago → 2 minutes ago
         let recipes: [(minutesAgo: Int, status: OrderStatus, cupCount: Int)] = [
             (18, .ready, 2),
             (10, .making, 1),

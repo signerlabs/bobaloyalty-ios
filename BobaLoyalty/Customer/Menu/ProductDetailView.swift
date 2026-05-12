@@ -2,12 +2,12 @@
 //  ProductDetailView.swift
 //  BobaLoyalty
 //
-//  商品详情 / 定制下单页：基于 ShipSwift Recipe `component-order-view` 改造
-//  - SWOrderView：杯子 matchedGeometryEffect 多杯展开 + 渐变背景跟随商品色
-//  - 顶部加料 chips（椰果 +2 / 珍珠 +3 / 布丁 +4 / 燕麦 +2 / 芋圆 +4）
-//  - 底部"加入购物车 ¥XX"按钮 → 写 CartItem 到 SwiftData + SWAlert 提示
+//  Product detail / customize-and-order page, adapted from ShipSwift Recipe `component-order-view`:
+//  - SWOrderView: matchedGeometryEffect multi-cup expansion + gradient background tracking the drink color
+//  - Top add-on chips (coconut jelly +2 / pearls +3 / pudding +4 / oats +2 / taro balls +4)
+//  - Bottom "Add to cart ¥XX" button → writes a CartItem to SwiftData + shows an SWAlert toast
 //
-//  视频炸场点：杯子从 1 → 2 → 3 杯的 spring 展开动画 + 切换糖度时背景渐变
+//  Demo-video highlight: the 1 → 2 → 3 cup spring expansion + background gradient shifting on sugar change.
 //
 
 import SwiftUI
@@ -24,7 +24,7 @@ struct ProductDetailView: View {
     @State private var selectedSugar: String = "五分糖"
     @State private var selectedAddons: Set<String> = []
 
-    /// 加料选项（名称 + 加价）
+    /// Add-on options (name + extra price)
     private let addonOptions: [(String, Double)] = [
         ("椰果", 2),
         ("珍珠", 3),
@@ -33,7 +33,7 @@ struct ProductDetailView: View {
         ("芋圆", 4)
     ]
 
-    /// 当前规格的单价（大杯 +3，超大 +6）
+    /// Unit price for the currently selected size (large +3, extra-large +6)
     private var unitPrice: Double {
         let sizeUp: Double = {
             switch selectedSize {
@@ -48,12 +48,12 @@ struct ProductDetailView: View {
         return product.price + sizeUp + addonUp
     }
 
-    /// 总价 = 单价 × 数量
+    /// Total = unit price × quantity
     private var totalPrice: Double {
         unitPrice * Double(qty)
     }
 
-    /// 商品色（用于背景渐变 baseColor）
+    /// Drink color (used as the base color for the background gradient)
     private var accentColor: Color {
         Color(product.imageName)
     }
@@ -89,7 +89,7 @@ struct ProductDetailView: View {
         }
     }
 
-    // MARK: - 顶部信息条（商品名 + 单价）
+    // MARK: - Top info bar (product name + unit price)
 
     private var topInfoBar: some View {
         HStack {
@@ -117,7 +117,7 @@ struct ProductDetailView: View {
         .padding(.top, 8)
     }
 
-    // MARK: - 加料 chips
+    // MARK: - Add-on chips
 
     private var addonsSection: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -173,7 +173,7 @@ struct ProductDetailView: View {
         .sensoryFeedback(.selection, trigger: isOn)
     }
 
-    // MARK: - 加入购物车按钮
+    // MARK: - Add-to-cart button
 
     private var addToCartButton: some View {
         Button {
@@ -196,7 +196,7 @@ struct ProductDetailView: View {
         .background(.black.opacity(0.2))
     }
 
-    // MARK: - 加购逻辑
+    // MARK: - Add-to-cart logic
 
     private func addToCart() {
         let item = CartItem(
@@ -210,7 +210,7 @@ struct ProductDetailView: View {
         modelContext.insert(item)
         SWAlertManager.shared.show(.success, message: "已加入购物车")
 
-        // 加完返回菜单，继续浏览
+        // After adding, dismiss back to the menu so the user can keep browsing
         dismiss()
     }
 }

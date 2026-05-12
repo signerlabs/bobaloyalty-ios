@@ -2,10 +2,11 @@
 //  CheckoutView.swift
 //  BobaLoyalty
 //
-//  结算页：订单摘要 + 支付方式选择 + mock 支付
-//  - 微信/支付宝两个大按钮（纯视觉，无 SDK）
-//  - 点击 → SWLoadingManager.shared.show(page: .checkout, ...) 1 秒
-//  - 1 秒后：写 Order（pointsEarned = 杯数 × 10）+ 累加 Customer.totalPoints + 清空 CartItem + 弹成功 toast + dismiss 回上一层
+//  Checkout page: order summary + payment-method picker + mock payment.
+//  - Two big buttons (WeChat Pay / Alipay), visual only with no SDK
+//  - On tap → `SWLoadingManager.shared.show(page: .checkout, ...)` for 1 second
+//  - After 1s: write the Order (pointsEarned = cups × 10), add to Customer.totalPoints,
+//    clear CartItems, show a success toast, and dismiss back to the previous screen.
 //
 
 import SwiftUI
@@ -20,17 +21,17 @@ struct CheckoutView: View {
     @State private var selectedPay: PayMethod = .wechat
     @State private var isPaying = false
 
-    /// 合计
+    /// Total amount
     private var totalAmount: Double {
         cartItems.reduce(0.0) { $0 + $1.lineTotal }
     }
 
-    /// 总杯数
+    /// Total cup count
     private var totalCups: Int {
         cartItems.reduce(0) { $0 + $1.quantity }
     }
 
-    /// 本单可得积分
+    /// Points earned by this order
     private var pointsEarned: Int {
         totalCups * 10
     }
@@ -62,7 +63,7 @@ struct CheckoutView: View {
         .disabled(isPaying)
     }
 
-    // MARK: - 订单摘要
+    // MARK: - Order summary
 
     private var summaryCard: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -119,7 +120,7 @@ struct CheckoutView: View {
         .background(Color.white, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
     }
 
-    // MARK: - 积分预告
+    // MARK: - Points preview
 
     private var pointsCard: some View {
         HStack(spacing: 12) {
@@ -146,7 +147,7 @@ struct CheckoutView: View {
         .background(Color.white, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
     }
 
-    // MARK: - 支付方式
+    // MARK: - Payment method
 
     private var paymentSection: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -200,7 +201,7 @@ struct CheckoutView: View {
         .sensoryFeedback(.selection, trigger: isOn)
     }
 
-    // MARK: - 支付按钮
+    // MARK: - Pay button
 
     private var payButton: some View {
         Button {
@@ -221,7 +222,7 @@ struct CheckoutView: View {
         .background(.ultraThinMaterial)
     }
 
-    // MARK: - mock 支付逻辑
+    // MARK: - Mock payment logic
 
     private func payNow() {
         guard !cartItems.isEmpty else {
@@ -236,7 +237,7 @@ struct CheckoutView: View {
             systemImage: selectedPay.icon
         )
 
-        // mock 1 秒支付
+        // Mock a 1-second payment
         Task {
             try? await Task.sleep(for: .seconds(1))
             await finalizeOrder()
@@ -245,7 +246,7 @@ struct CheckoutView: View {
 
     @MainActor
     private func finalizeOrder() async {
-        // 1. 把 CartItem 转成 OrderLine 嵌入 Order
+        // 1. Convert each CartItem into an OrderLine embedded in the Order
         let lines = cartItems.map { ci in
             OrderLine(
                 productName: ci.product?.name ?? "商品",
@@ -258,7 +259,7 @@ struct CheckoutView: View {
             )
         }
 
-        // 2. 取或建会员
+        // 2. Get or create the member
         let customer: Customer
         if let first = customers.first {
             customer = first
@@ -268,7 +269,7 @@ struct CheckoutView: View {
             customer = new
         }
 
-        // 3. 写订单
+        // 3. Write the order
         let order = Order(
             items: lines,
             totalAmount: totalAmount,
@@ -278,22 +279,22 @@ struct CheckoutView: View {
         )
         modelContext.insert(order)
 
-        // 4. 累加积分
+        // 4. Accumulate points
         customer.totalPoints += pointsEarned
 
-        // 5. 清空购物车
+        // 5. Empty the cart
         for item in cartItems {
             modelContext.delete(item)
         }
 
-        // 6. 收尾
+        // 6. Wrap up
         SWLoadingManager.shared.hide(page: .checkout)
         SWAlertManager.shared.show(.success, message: "支付成功 +\(pointsEarned) 积分")
         isPaying = false
         dismiss()
     }
 
-    // MARK: - 复用 Section 头
+    // MARK: - Reusable section header
 
     private func sectionHeader(_ title: String, icon: String) -> some View {
         HStack(spacing: 6) {
@@ -307,7 +308,7 @@ struct CheckoutView: View {
     }
 }
 
-// MARK: - 支付方式
+// MARK: - Payment method
 
 private enum PayMethod: CaseIterable {
     case wechat

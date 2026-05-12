@@ -2,11 +2,11 @@
 //  OwnerSettingsView.swift
 //  BobaLoyalty
 //
-//  老板端 Tab 4：设置
-//  - 门店：店名 / 营业时间
-//  - 会员运营：群发促销券（SWAddSheet 输入面额）/ 重置 mock 数据（二次确认）
-//  - 账号：登录方式（mock）
-//  - 其他：版本号 / 切换角色 / 关于
+//  Owner-side Tab 4: Settings.
+//  - Store: name / business hours
+//  - Member ops: broadcast a promo coupon (SWAddSheet asks for the amount) / reset mock data (with a confirm dialog)
+//  - Account: sign-in method (mock)
+//  - Misc: version / switch role / about
 //
 
 import SwiftUI
@@ -30,7 +30,7 @@ struct OwnerSettingsView: View {
 
     var body: some View {
         Form {
-            // MARK: 门店
+            // MARK: Store
             Section("门店") {
                 LabeledContent("门店名称") {
                     TextField("门店名称", text: $storeName)
@@ -52,7 +52,7 @@ struct OwnerSettingsView: View {
                 }
             }
 
-            // MARK: 会员运营
+            // MARK: Member ops
             Section("会员运营") {
                 Button {
                     showingPromoSheet = true
@@ -73,7 +73,7 @@ struct OwnerSettingsView: View {
                 }
             }
 
-            // MARK: 账号
+            // MARK: Account
             Section("账号") {
                 LabeledContent("登录方式") {
                     HStack(spacing: 6) {
@@ -88,7 +88,7 @@ struct OwnerSettingsView: View {
                 }
             }
 
-            // MARK: 其他
+            // MARK: Misc
             Section("其他") {
                 LabeledContent("版本号") {
                     Text(appVersion)
@@ -109,7 +109,7 @@ struct OwnerSettingsView: View {
         .scrollContentBackground(.hidden)
         .background(Color("BobaCream").ignoresSafeArea())
         .navigationTitle("设置")
-        // 群发券 sheet
+        // Broadcast-coupon sheet
         .sheet(isPresented: $showingPromoSheet) {
             SWAddSheet(
                 isPresented: $showingPromoSheet,
@@ -120,7 +120,7 @@ struct OwnerSettingsView: View {
                 broadcastPromo(amountText: input)
             }
         }
-        // 重置数据二次确认
+        // Reset-data confirmation
         .alert("重置 Mock 数据", isPresented: $showingResetConfirm) {
             Button("取消", role: .cancel) {}
             Button("确认重置", role: .destructive) {
@@ -129,7 +129,7 @@ struct OwnerSettingsView: View {
         } message: {
             Text("将清空所有商品、订单、会员、优惠券，并重新灌入种子数据。")
         }
-        // 切换角色二次确认
+        // Switch-role confirmation
         .alert("切换角色", isPresented: $showingRoleSwitchConfirm) {
             Button("取消", role: .cancel) {}
             Button("退出老板端", role: .destructive) {
@@ -143,7 +143,7 @@ struct OwnerSettingsView: View {
         }
     }
 
-    // MARK: - 群发促销券
+    // MARK: - Broadcast a promo coupon
 
     private func broadcastPromo(amountText: String) {
         let trimmed = amountText.trimmingCharacters(in: .whitespaces)
@@ -170,11 +170,11 @@ struct OwnerSettingsView: View {
         SWAlertManager.shared.show(.success, message: "已发券给 \(customers.count) 位会员")
     }
 
-    // MARK: - 重置 Mock 数据
+    // MARK: - Reset mock data
 
     private func resetMockData() {
         do {
-            // 删除所有 SwiftData 实体
+            // Delete every SwiftData entity
             for o in orders { modelContext.delete(o) }
             for p in products { modelContext.delete(p) }
             for c in customers { modelContext.delete(c) }
@@ -182,7 +182,7 @@ struct OwnerSettingsView: View {
 
             try modelContext.save()
 
-            // 重新灌种子数据
+            // Re-seed mock data
             MockSeed.seedIfNeeded(in: modelContext)
 
             SWAlertManager.shared.show(.success, message: "Mock 数据已重置")
@@ -191,7 +191,7 @@ struct OwnerSettingsView: View {
         }
     }
 
-    // MARK: - 关于页
+    // MARK: - About page
 
     private var aboutPage: some View {
         VStack(spacing: 18) {
@@ -216,7 +216,7 @@ struct OwnerSettingsView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 
-    // MARK: - 版本号
+    // MARK: - App version
 
     private var appVersion: String {
         let v = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"

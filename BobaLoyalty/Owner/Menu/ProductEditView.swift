@@ -2,23 +2,23 @@
 //  ProductEditView.swift
 //  BobaLoyalty
 //
-//  商品编辑 sheet：新建 / 编辑共用
-//  - 名称、价格、分类、占位色 chip 选择
-//  - 可选规格 / 糖度 checkbox
-//  - 上下架开关
-//  - 保存即写入 SwiftData，搭配 SWAlert toast
+//  Product-edit sheet, shared between create and edit modes.
+//  - Name, price, category, color-chip placeholder picker
+//  - Size / sugar checkboxes
+//  - Listing (on-sale) toggle
+//  - Save writes to SwiftData and shows an SWAlert toast
 //
 
 import SwiftUI
 import SwiftData
 
 struct ProductEditView: View {
-    /// 编辑模式：传入 existing；新建模式：传入 nil
+    /// Edit mode: pass `existing`; create mode: pass nil
     let existing: Product?
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
 
-    // MARK: - 表单字段
+    // MARK: - Form fields
 
     @State private var name: String = ""
     @State private var priceText: String = ""
@@ -28,13 +28,13 @@ struct ProductEditView: View {
     @State private var selectedSugar: Set<String> = ["无糖", "三分糖", "五分糖", "七分糖", "全糖"]
     @State private var isOnSale: Bool = false
 
-    // MARK: - 选项常量
+    // MARK: - Option constants
 
     private let categoryOptions = ["招牌", "奶茶系列", "果茶系列", "拿铁系列", "小食"]
     private let sizeOptions = ["小杯", "中杯", "大杯", "超大杯"]
     private let sugarOptions = ["无糖", "三分糖", "五分糖", "七分糖", "全糖"]
 
-    /// 8 个商品占位色 chip
+    /// 8 product-color placeholder chips
     private let imageOptions: [String] = [
         "Drink_NaiCha", "Drink_ZhenZhu", "Drink_MoCha", "Drink_MoLi",
         "Drink_YuYuan", "Drink_KaoNai", "Drink_YangZhi", "Drink_NingMeng"
@@ -43,7 +43,7 @@ struct ProductEditView: View {
     private var isEditing: Bool { existing != nil }
     private var titleText: String { isEditing ? "编辑商品" : "新增商品" }
 
-    /// 表单是否合法
+    /// Whether the form is valid
     private var canSubmit: Bool {
         !name.trimmingCharacters(in: .whitespaces).isEmpty
             && Double(priceText) != nil
@@ -54,7 +54,7 @@ struct ProductEditView: View {
     var body: some View {
         NavigationStack {
             Form {
-                // MARK: 基本信息
+                // MARK: Basic info
                 Section("基本信息") {
                     TextField("商品名称", text: $name)
                     HStack {
@@ -71,7 +71,7 @@ struct ProductEditView: View {
                     Toggle("当前热卖", isOn: $isOnSale)
                 }
 
-                // MARK: 占位色
+                // MARK: Placeholder color
                 Section("占位色") {
                     LazyVGrid(
                         columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 4),
@@ -84,7 +84,7 @@ struct ProductEditView: View {
                     .padding(.vertical, 4)
                 }
 
-                // MARK: 可选规格
+                // MARK: Available sizes
                 Section("可选规格") {
                     ForEach(sizeOptions, id: \.self) { size in
                         toggleRow(text: size, isOn: Binding(
@@ -97,7 +97,7 @@ struct ProductEditView: View {
                     }
                 }
 
-                // MARK: 糖度
+                // MARK: Sugar level
                 Section("可选糖度") {
                     ForEach(sugarOptions, id: \.self) { sugar in
                         toggleRow(text: sugar, isOn: Binding(
@@ -125,7 +125,7 @@ struct ProductEditView: View {
         }
     }
 
-    // MARK: - 子视图
+    // MARK: - Subviews
 
     private func colorChip(_ name: String) -> some View {
         let isSelected = imageName == name
@@ -157,7 +157,7 @@ struct ProductEditView: View {
         }
     }
 
-    // MARK: - 状态加载
+    // MARK: - State loading
 
     private func loadInitialState() {
         guard let p = existing else { return }
@@ -170,14 +170,14 @@ struct ProductEditView: View {
         isOnSale = p.isOnSale
     }
 
-    // MARK: - 保存
+    // MARK: - Save
 
     private func save() {
         guard let price = Double(priceText) else { return }
         let trimmedName = name.trimmingCharacters(in: .whitespaces)
 
         if let p = existing {
-            // 编辑现有
+            // Edit existing product
             p.name = trimmedName
             p.price = price
             p.categoryName = category
@@ -187,7 +187,7 @@ struct ProductEditView: View {
             p.isOnSale = isOnSale
             SWAlertManager.shared.show(.success, message: "商品已更新")
         } else {
-            // 新建
+            // Create new product
             let new = Product(
                 name: trimmedName,
                 categoryName: category,

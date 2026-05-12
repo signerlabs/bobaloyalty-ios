@@ -2,14 +2,14 @@
 //  PointsView.swift
 //  BobaLoyalty
 //
-//  顾客端积分中心：
-//  - 顶部：SWRingChart 两环嵌套
-//      外环（BobaCaramel）= 距离免费饮品（value = totalPoints % 100，max = 100）
-//      内环（BobaMatcha）= 本月消费次数（value = 本月订单数，max = 20）
-//      中央：totalPoints 大字 + "积分"小字
-//  - 满 100 积分时显示"兑换免费一杯"按钮（-100 积分 + 派发一张 promo 券）
-//  - 我的优惠券（@Query var coupons）
-//  - 最近消费（@Query var orders 倒序）
+//  Customer-side points center:
+//  - Top: nested SWRingChart with two rings
+//      Outer ring (BobaCaramel) = progress toward the next free drink (value = totalPoints % 100, max = 100)
+//      Inner ring (BobaMatcha)  = orders this month (value = monthly order count, max = 20)
+//      Center: large `totalPoints` + small "积分" (points) label
+//  - When totalPoints >= 100, show a "Redeem free drink" button (deducts 100 points and issues a promo coupon)
+//  - My coupons (`@Query var coupons`)
+//  - Recent purchases (`@Query var orders`, reversed)
 //
 
 import SwiftUI
@@ -22,10 +22,10 @@ struct PointsView: View {
 
     @Environment(\.modelContext) private var modelContext
 
-    /// 当前会员（取首位，BobaLoyalty mock 只一个会员）
+    /// Current member (take the first; BobaLoyalty mock has only one member)
     private var customer: Customer? { customers.first }
 
-    /// 本月订单数
+    /// Orders this month
     private var monthlyOrderCount: Int {
         guard let customer else { return 0 }
         return orders.filter {
@@ -34,13 +34,13 @@ struct PointsView: View {
         }.count
     }
 
-    /// 当前会员的订单（倒序）
+    /// Current member's orders (reversed)
     private var myOrders: [Order] {
         guard let customer else { return [] }
         return orders.filter { $0.customerID == customer.id.uuidString }
     }
 
-    /// 当前会员的可用券（未核销 + 未过期）
+    /// Current member's coupons (filtered by member; both used and unused are listed)
     private var myCoupons: [Coupon] {
         guard let customer else { return [] }
         return coupons.filter { $0.customerID == customer.id.uuidString }
@@ -69,7 +69,7 @@ struct PointsView: View {
         }
     }
 
-    // MARK: - 环形图区
+    // MARK: - Ring chart section
 
     private var ringSection: some View {
         VStack(spacing: 14) {
@@ -109,7 +109,7 @@ struct PointsView: View {
         .background(Color.white, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
     }
 
-    // MARK: - 兑换按钮（满 100 才显示）
+    // MARK: - Redeem button (shown only when totalPoints >= 100)
 
     @ViewBuilder
     private var redeemButton: some View {
@@ -131,7 +131,7 @@ struct PointsView: View {
         }
     }
 
-    // MARK: - 优惠券 Section
+    // MARK: - Coupons section
 
     private var couponsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -155,7 +155,7 @@ struct PointsView: View {
         }
     }
 
-    // MARK: - 最近消费 Section
+    // MARK: - Recent purchases section
 
     private var ordersSection: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -177,7 +177,7 @@ struct PointsView: View {
         }
     }
 
-    // MARK: - 子动作
+    // MARK: - Actions
 
     private func redeemFreeDrink(customer: Customer) {
         customer.totalPoints -= 100
@@ -211,7 +211,7 @@ struct PointsView: View {
     }
 }
 
-// MARK: - 优惠券行
+// MARK: - Coupon row
 
 private struct CouponRow: View {
     let coupon: Coupon
@@ -281,7 +281,7 @@ private struct CouponRow: View {
     }
 }
 
-// MARK: - 订单行
+// MARK: - Order row
 
 private struct OrderRow: View {
     let order: Order

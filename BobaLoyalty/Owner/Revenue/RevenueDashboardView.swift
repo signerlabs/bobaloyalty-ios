@@ -2,17 +2,17 @@
 //  RevenueDashboardView.swift
 //  BobaLoyalty
 //
-//  老板端 Tab 3：营收看板（视频炸场页 ⭐）
+//  Owner-side Tab 3: revenue dashboard (the demo-video money shot).
 //
-//  视觉结构：
-//  - 顶部 2×2 数据卡片：今日营收 / 今日杯数 / 本月营收 / 月度新增会员
-//  - 三张图表（每张一个白底圆角阴影卡片，标题 BobaBrown 字色）：
-//    1. SWBarChart   — 近 7 天每日营收柱状图
-//    2. SWLineChart  — 近 30 天订单数趋势 + 平均值参考线
-//    3. SWDonutChart — 商品销量占比，可点击高亮
+//  Visual layout:
+//  - Top 2×2 KPI cards: today's revenue / today's cups / this month's revenue / new members this month
+//  - Three charts (each in a white rounded card with shadow and a BobaBrown title):
+//    1. SWBarChart   — bar chart of daily revenue over the last 7 days
+//    2. SWLineChart  — line chart of order count over the last 30 days, with a daily-average reference line
+//    3. SWDonutChart — share of product sales, tap to highlight a slice
 //
-//  数据计算：直接在 View 内 computed property 从 @Query 出来的 orders 聚合，
-//  不引入 ViewModel 层（mock 数据规模小，View 渲染前算一遍完全够）
+//  Data computation: aggregated in View-level computed properties directly from the @Query-fetched orders.
+//  No ViewModel layer (mock data is small enough that recomputing per render is fine).
 //
 
 import SwiftUI
@@ -25,10 +25,10 @@ struct RevenueDashboardView: View {
 
     @Query private var customers: [Customer]
 
-    /// 甜甜圈选中分类
+    /// Selected donut-chart category
     @State private var selectedProductName: String?
 
-    // MARK: - 时间锚点
+    // MARK: - Time anchors
 
     private let calendar = Calendar.current
     private var startOfToday: Date { calendar.startOfDay(for: .now) }
@@ -39,7 +39,7 @@ struct RevenueDashboardView: View {
         calendar.date(from: calendar.dateComponents([.year, .month], from: .now)) ?? startOfToday
     }
 
-    // MARK: - 顶部数据
+    // MARK: - Top KPIs
 
     private var todayOrders: [Order] {
         orders.filter { $0.createdAt >= startOfToday }
@@ -58,7 +58,7 @@ struct RevenueDashboardView: View {
         yesterdayOrders.reduce(0) { $0 + $1.totalAmount }
     }
 
-    /// 今日 vs 昨日同比百分比，nil 表示昨日没数据无法对比
+    /// Today-vs-yesterday percent change; nil when yesterday has no data to compare against
     private var todayDeltaPercent: Double? {
         guard yesterdayRevenue > 0 else { return nil }
         return (todayRevenue - yesterdayRevenue) / yesterdayRevenue * 100
@@ -74,9 +74,9 @@ struct RevenueDashboardView: View {
         customers.filter { $0.joinedAt >= startOfThisMonth }.count
     }
 
-    // MARK: - 图表数据
+    // MARK: - Chart data
 
-    /// 近 7 天每日营收（用于柱状图）
+    /// Daily revenue over the last 7 days (for the bar chart)
     private var last7DaysRevenue: [SWBarChart<String>.DataPoint] {
         (0..<7).compactMap { offset in
             guard let dayStart = calendar.date(byAdding: .day, value: -offset, to: startOfToday),
@@ -94,7 +94,7 @@ struct RevenueDashboardView: View {
         }
     }
 
-    /// 近 30 天订单数（用于折线图）
+    /// Order count over the last 30 days (for the line chart)
     private var last30DaysOrderCount: [SWLineChart<String>.DataPoint] {
         (0..<30).compactMap { offset in
             guard let dayStart = calendar.date(byAdding: .day, value: -offset, to: startOfToday),
@@ -112,13 +112,13 @@ struct RevenueDashboardView: View {
         }
     }
 
-    /// 30 天日均订单数（折线图参考线）
+    /// 30-day daily average order count (used as the line chart's reference line)
     private var avgDailyOrderCount: Double {
         let totalCount = last30DaysOrderCount.reduce(0.0) { $0 + $1.value }
         return totalCount / 30
     }
 
-    /// 商品销量占比（每杯算一个 Subject）
+    /// Product sales share (each cup counts as one Subject)
     private var productMixSubjects: [SWDonutChart.Subject] {
         var subjects: [SWDonutChart.Subject] = []
         for order in orders {
@@ -142,10 +142,10 @@ struct RevenueDashboardView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 18) {
-                // 顶部 4 张 KPI
+                // Top 4 KPI cards
                 kpiGrid
 
-                // 三张图表
+                // Three charts
                 chartCard(title: "近 7 天营收") {
                     SWBarChart(
                         dataPoints: last7DaysRevenue,
@@ -190,7 +190,7 @@ struct RevenueDashboardView: View {
         .navigationTitle("营收看板")
     }
 
-    // MARK: - 顶部 KPI 网格
+    // MARK: - Top KPI grid
 
     private var kpiGrid: some View {
         let columns = [
@@ -266,7 +266,7 @@ struct RevenueDashboardView: View {
         )
     }
 
-    /// 同比标签
+    /// Percent-change tag
     private func deltaTag(_ delta: Double?) -> AnyView {
         guard let delta else {
             return AnyView(
@@ -302,7 +302,7 @@ struct RevenueDashboardView: View {
             .foregroundStyle(.secondary)
     }
 
-    // MARK: - 图表卡片
+    // MARK: - Chart card
 
     @ViewBuilder
     private func chartCard<Content: View>(

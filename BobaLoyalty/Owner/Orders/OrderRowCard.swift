@@ -2,8 +2,9 @@
 //  OrderRowCard.swift
 //  BobaLoyalty
 //
-//  订单流单行卡片：订单号末 4 位 / 相对时间 / 商品摘要 / 金额 / 状态徽章
-//  设计目标：一眼能看到关键信息，pending 订单视觉醒目。
+//  Single row card in the order stream: last 4 of the order ID / relative time /
+//  item summary / amount / status badge.
+//  Design goal: key info at a glance, with pending orders visually prominent.
 //
 
 import SwiftUI
@@ -11,26 +12,26 @@ import SwiftUI
 struct OrderRowCard: View {
     let order: Order
 
-    /// 商品摘要：聚合相同商品名 + 杯数，例如 "招牌奶茶 ×2, 抹茶拿铁 ×1"
+    /// Item summary: aggregates by product name + cup count, e.g. "招牌奶茶 ×2, 抹茶拿铁 ×1"
     private var itemsSummary: String {
-        // 按商品名聚合数量
+        // Aggregate quantities by product name
         let grouped = Dictionary(grouping: order.items, by: \.productName)
         let parts = grouped.map { name, lines in
             let count = lines.reduce(0) { $0 + $1.quantity }
             return "\(name) ×\(count)"
         }
-        // 按数量倒序，让大头在前
+        // Sort so the largest groups come first
         return parts.sorted().joined(separator: ", ")
     }
 
-    /// 订单号末 4 位
+    /// Last 4 of the order ID
     private var shortOrderId: String {
         String(order.id.uuidString.suffix(4))
     }
 
     var body: some View {
         HStack(spacing: 12) {
-            // 左侧主信息
+            // Left-side primary info
             VStack(alignment: .leading, spacing: 6) {
                 HStack(spacing: 8) {
                     Text("#\(shortOrderId)")
@@ -56,7 +57,7 @@ struct OrderRowCard: View {
 
             Spacer()
 
-            // 右侧金额 + 杯数
+            // Right-side amount + cup count
             VStack(alignment: .trailing, spacing: 6) {
                 Text("¥\(order.totalAmount, specifier: "%.0f")")
                     .font(.title3)

@@ -2,9 +2,10 @@
 //  MenuView.swift
 //  BobaLoyalty
 //
-//  顾客端菜单页：品牌 header + 横向分类切换（SWTabButton）+ 商品 LazyVGrid 2 列网格
-//  数据源：@Query var products: [Product] 直接读 SwiftData
-//  点击商品 push 到 ProductDetailView
+//  Customer-side menu page: brand header + horizontal category switcher (SWTabButton) +
+//  2-column LazyVGrid of products.
+//  Data source: `@Query var products: [Product]` reads directly from SwiftData.
+//  Tapping a product pushes to ProductDetailView.
 //
 
 import SwiftUI
@@ -14,7 +15,7 @@ struct MenuView: View {
     @Query(sort: \Product.createdAt) private var products: [Product]
     @State private var selectedCategory: String = "全部"
 
-    /// 自动从商品中聚合分类（"全部" + 出现的分类去重保序）
+    /// Aggregate categories from products (the literal "全部" / "All" prepended, plus unique categories preserving order)
     private var categories: [String] {
         var ordered: [String] = []
         for p in products where !ordered.contains(p.categoryName) {
@@ -23,7 +24,7 @@ struct MenuView: View {
         return ["全部"] + ordered
     }
 
-    /// 当前分类下的商品
+    /// Products under the currently selected category
     private var filteredProducts: [Product] {
         if selectedCategory == "全部" {
             return products
@@ -56,7 +57,7 @@ struct MenuView: View {
         }
     }
 
-    // MARK: - 品牌 Header
+    // MARK: - Brand header
 
     private var brandHeader: some View {
         ZStack(alignment: .bottomLeading) {
@@ -86,7 +87,7 @@ struct MenuView: View {
         .frame(height: 140)
     }
 
-    // MARK: - 分类切换条
+    // MARK: - Category switcher bar
 
     private var categoryBar: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -108,7 +109,7 @@ struct MenuView: View {
         .background(Color("BobaPearl"))
     }
 
-    // MARK: - 商品网格
+    // MARK: - Product grid
 
     private var productGrid: some View {
         LazyVGrid(columns: columns, spacing: 14) {
@@ -126,14 +127,14 @@ struct MenuView: View {
     }
 }
 
-// MARK: - 商品卡片
+// MARK: - Product card
 
 private struct ProductCard: View {
     let product: Product
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // 图片区：自适应卡片宽度的正方形，四周 12pt 内边距与卡片留白
+            // Image area: card-width square, 12pt inset on all sides for breathing room
             ZStack(alignment: .topLeading) {
                 Color(product.imageName)
                     .overlay(
@@ -156,7 +157,7 @@ private struct ProductCard: View {
             }
             .padding(12)
 
-            // 文字区：横向 16pt 与卡片留出对齐感，底部 14pt
+            // Text area: 16pt horizontal padding so it aligns nicely with the card, 14pt bottom padding
             VStack(alignment: .leading, spacing: 6) {
                 Text(product.name)
                     .font(.subheadline.bold())

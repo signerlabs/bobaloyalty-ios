@@ -2,10 +2,10 @@
 //  ProfileView.swift
 //  BobaLoyalty
 //
-//  顾客端"我的"页：
-//  - 会员卡片（昵称 + 总积分 + 加入时间）
-//  - 设置生日 DatePicker（若 7 天内将到生日，自动派发生日券）
-//  - 切换角色按钮（清 @AppStorage userRole）
+//  Customer-side "Profile" page:
+//  - Member card (nickname + total points + join date)
+//  - Birthday DatePicker (auto-issues a birthday coupon if the birthday is within 7 days)
+//  - Switch-role button (clears @AppStorage userRole)
 //
 
 import SwiftUI
@@ -52,7 +52,7 @@ struct ProfileView: View {
         }
     }
 
-    // MARK: - 会员卡
+    // MARK: - Member card
 
     private var memberCard: some View {
         ZStack(alignment: .bottomLeading) {
@@ -106,7 +106,7 @@ struct ProfileView: View {
         .frame(minHeight: 150)
     }
 
-    // MARK: - 生日卡
+    // MARK: - Birthday card
 
     private var birthdayCard: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -154,7 +154,7 @@ struct ProfileView: View {
         .background(Color.white, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
     }
 
-    // MARK: - 动作卡片
+    // MARK: - Action cards
 
     private var actionCards: some View {
         VStack(spacing: 0) {
@@ -199,7 +199,7 @@ struct ProfileView: View {
         .padding(.vertical, 14)
     }
 
-    // MARK: - 切换角色
+    // MARK: - Switch role
 
     private var switchRoleButton: some View {
         Button(role: .destructive) {
@@ -216,7 +216,7 @@ struct ProfileView: View {
         .padding(.top, 8)
     }
 
-    // MARK: - 生日逻辑
+    // MARK: - Birthday logic
 
     private func saveBirthday() {
         guard let c = customer else { return }
@@ -224,7 +224,7 @@ struct ProfileView: View {
         hasBirthday = true
 
         if isWithinNext7Days(birthday) {
-            // 检查是否已经派过近期生日券，避免重复发
+            // Check whether a recent birthday coupon has already been issued, to avoid duplicates
             let alreadyIssued = coupons.contains { coupon in
                 coupon.customerID == c.id.uuidString &&
                 coupon.kind == .birthday &&
@@ -246,20 +246,20 @@ struct ProfileView: View {
         SWAlertManager.shared.show(.success, message: "生日已保存")
     }
 
-    /// 生日是否落在未来 7 天内（按当年比对，不看年份）
+    /// Whether the birthday falls within the next 7 days (compared by month/day, ignoring year)
     private func isWithinNext7Days(_ date: Date) -> Bool {
         let cal = Calendar.current
         let now = Date.now
         let comps: Set<Calendar.Component> = [.month, .day]
         let birthComps = cal.dateComponents(comps, from: date)
 
-        // 找今年的生日
+        // Find this year's birthday
         var thisYear = cal.dateComponents([.year], from: now)
         thisYear.month = birthComps.month
         thisYear.day = birthComps.day
         guard let thisYearBday = cal.date(from: thisYear) else { return false }
 
-        // 若已过，看明年
+        // If it has already passed, look at next year
         let upcoming = thisYearBday < cal.startOfDay(for: now)
             ? (cal.date(byAdding: .year, value: 1, to: thisYearBday) ?? thisYearBday)
             : thisYearBday
