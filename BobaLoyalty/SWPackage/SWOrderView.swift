@@ -2,14 +2,15 @@
 //  SWOrderView.swift
 //  BobaLoyalty
 //
-//  ShipSwift Recipe: component-order-view（主组件）
-//  奶茶定制核心交互：杯子 matchedGeometryEffect 多杯展开 + 渐变背景跟随颜色
+//  ShipSwift Recipe: component-order-view (main component).
+//  Core drink-customization interaction: cups expand/contract with matchedGeometryEffect
+//  and the gradient background follows the drink color.
 //
-//  BobaLoyalty 改造：
-//  - flavor → sugar（糖度："无糖/三分糖/半糖/全糖"）
-//  - size 保留（"中杯/大杯/超大"）
-//  - SWCupView 把 ImageResource 换成 Color + SF Symbol 胶囊形占位
-//    （主公后期可换成 Unsplash 实拍，只需替换 SWCupView body 即可）
+//  BobaLoyalty adaptations:
+//  - flavor → sugar (sugar level: zero / 30% / half / full)
+//  - size kept (medium / large / extra-large)
+//  - SWCupView replaces ImageResource with a Color + SF Symbol capsule placeholder
+//    (later, swap to real photos by replacing the body of SWCupView)
 //
 
 import SwiftUI
@@ -17,9 +18,9 @@ import SwiftUI
 // MARK: - SWOrderView
 
 struct SWOrderView: View {
-    /// 顶部展示用的杯色（由调用方注入：菜单选商品时已知 product.imageName）
+    /// Cup color displayed at the top (injected by the caller; the menu already knows `product.imageName`)
     var cupColorName: String = "Drink_NaiCha"
-    /// 杯壁/背景渐变的 baseColor（驱动整个页面氛围色，跟随商品色）
+    /// Base color for cup walls / background gradient (drives the whole page accent, following the drink color)
     var accentColor: Color = Color("BobaCaramel")
 
     @Binding var qty: Int
@@ -85,9 +86,9 @@ struct SWOrderView: View {
     }
 }
 
-// MARK: - SWCupView（奶茶胶囊形占位）
+// MARK: - SWCupView (capsule-shaped drink placeholder)
 
-/// 杯子视图：用 Color + SF Symbol 做"胶囊杯子"占位，未来可换成 Image
+/// Cup view: uses Color + SF Symbol to draw a "capsule cup" placeholder; can later be swapped for an Image
 struct SWCupView: View {
     let idx: Int
     let count: Int
@@ -133,16 +134,16 @@ struct SWCupView: View {
             ))
     }
 
-    /// 胶囊形杯子：上盖（深色）+ 杯身（商品色）+ 杯口图标
+    /// Capsule cup: lid (dark) + body (drink color) + mouth icon
     private var cupShape: some View {
         VStack(spacing: 0) {
-            // 杯盖
+            // Lid
             RoundedRectangle(cornerRadius: 6, style: .continuous)
                 .fill(Color.black.opacity(0.55))
                 .frame(height: 14)
                 .padding(.horizontal, -6)
 
-            // 杯身：Capsule 形状装真照片，保留 matchedGeometryEffect 动画
+            // Body: a Capsule clip that holds the real photo while preserving the matchedGeometryEffect animation
             Capsule(style: .continuous)
                 .fill(Color(cupColorName))
                 .overlay(
@@ -159,7 +160,7 @@ struct SWCupView: View {
     }
 }
 
-// MARK: - SWOrderButton（顶部圆形按钮，菜单页可选用）
+// MARK: - SWOrderButton (top circular button, optional for use on the menu page)
 
 struct SWOrderButton: View {
     let icon: String

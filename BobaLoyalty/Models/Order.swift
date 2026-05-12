@@ -2,22 +2,23 @@
 //  Order.swift
 //  BobaLoyalty
 //
-//  订单模型：一次下单 = 一个 Order
-//  OrderLine 用 Codable struct 保存，避免 SwiftData 嵌套关系的复杂度
-//  （也防止商品后期被删或改名导致历史订单数据消失）
+//  Order model: one checkout = one Order.
+//  OrderLine is stored as a Codable struct rather than a nested SwiftData relationship,
+//  which both avoids relationship-graph complexity and prevents historical orders from
+//  losing data if a product is later deleted or renamed.
 //
 
 import Foundation
 import SwiftData
 
-// MARK: - 订单状态
+// MARK: - Order status
 
 enum OrderStatus: String, Codable, CaseIterable {
-    case pending      // 待制作
-    case making       // 制作中
-    case ready        // 待自取
-    case completed    // 已完成
-    case cancelled    // 已取消
+    case pending      // Awaiting preparation
+    case making       // In preparation
+    case ready        // Ready for pickup
+    case completed    // Completed
+    case cancelled    // Cancelled
 
     var displayName: String {
         switch self {
@@ -30,7 +31,7 @@ enum OrderStatus: String, Codable, CaseIterable {
     }
 }
 
-// MARK: - 订单明细行（嵌入 Order，不参与关系图）
+// MARK: - Order line (embedded in Order, not part of the relationship graph)
 
 struct OrderLine: Codable, Hashable, Identifiable {
     var id: UUID
@@ -40,7 +41,7 @@ struct OrderLine: Codable, Hashable, Identifiable {
     var addons: [String]
     var quantity: Int
     var unitPrice: Double
-    /// 占位色，方便订单详情仍能渲染商品色卡
+    /// Placeholder color name, so order details can still render a color swatch for the product
     var imageName: String
 
     init(
@@ -74,15 +75,15 @@ struct OrderLine: Codable, Hashable, Identifiable {
 final class Order {
     @Attribute(.unique) var id: UUID
     var createdAt: Date
-    /// 明细行（多杯）
+    /// Line items (multiple cups)
     var items: [OrderLine]
-    /// 订单总额
+    /// Order total amount
     var totalAmount: Double
-    /// 状态（用 rawValue 持久化，方便 Predicate 过滤）
+    /// Status (persisted as rawValue, makes Predicate filtering easier)
     var statusRaw: String
-    /// 本单实得积分
+    /// Points earned by this order
     var pointsEarned: Int
-    /// 顾客 ID（用 UUID 字符串方便跨表查询）
+    /// Customer ID (UUID string for easy cross-table lookups)
     var customerID: String
 
     init(
@@ -103,13 +104,13 @@ final class Order {
         self.customerID = customerID
     }
 
-    /// 类型安全的状态访问器
+    /// Type-safe accessor for the status
     var status: OrderStatus {
         get { OrderStatus(rawValue: statusRaw) ?? .pending }
         set { statusRaw = newValue.rawValue }
     }
 
-    /// 总杯数
+    /// Total cup count
     var totalCups: Int {
         items.reduce(0) { $0 + $1.quantity }
     }

@@ -2,9 +2,9 @@
 //  Product.swift
 //  BobaLoyalty
 //
-//  商品模型：奶茶、果茶、奶绿等饮品
-//  imageName 指向 Assets 中的占位色 Color Set（Drink_NaiCha 等），
-//  后期可替换为 Unsplash 实拍 / AI 生图，不需要改模型。
+//  Product model: milk teas, fruit teas, milk greens, and other drinks.
+//  `imageName` points to a placeholder Color Set in Assets (e.g. Drink_NaiCha).
+//  Later it can be swapped for real Unsplash photos or AI imagery without changing the model.
 //
 
 import Foundation
@@ -12,23 +12,23 @@ import SwiftData
 
 @Model
 final class Product {
-    /// 商品唯一 ID
+    /// Unique product ID
     @Attribute(.unique) var id: UUID
-    /// 商品名称（招牌奶茶、珍珠奶茶等）
+    /// Product name (signature milk tea, boba milk tea, etc.)
     var name: String
-    /// 分类名称（招牌、奶茶系列、果茶系列等）
+    /// Category name (signature, milk-tea series, fruit-tea series, etc.)
     var categoryName: String
-    /// 单价（最小规格价格，单位元）
+    /// Unit price for the smallest size, in CNY (yuan)
     var price: Double
-    /// 占位色 Color Set 名（如 Drink_NaiCha）；将来换实拍直接换字符串即可
+    /// Placeholder Color Set name (e.g. "Drink_NaiCha"); swap the string when real photos are available
     var imageName: String
-    /// 可选规格（中杯 / 大杯）
+    /// Available sizes (e.g. medium / large)
     var availableSizes: [String]
-    /// 可选糖度（无糖 / 三分糖 / 五分糖 / 七分糖 / 全糖）
+    /// Available sugar levels (zero / 30% / 50% / 70% / full sugar)
     var availableSugar: [String]
-    /// 是否是当前热卖，菜单顶部用 Badge 高亮
+    /// Whether this is a current bestseller; surfaced with a "hot" badge at the top of the menu
     var isOnSale: Bool
-    /// 创建时间，用于老板端按时间排序
+    /// Created-at timestamp, used to sort the owner-side product list
     var createdAt: Date
 
     init(

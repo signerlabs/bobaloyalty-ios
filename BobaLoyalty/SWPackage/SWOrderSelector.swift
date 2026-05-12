@@ -2,9 +2,9 @@
 //  SWOrderSelector.swift
 //  BobaLoyalty
 //
-//  ShipSwift Recipe: component-order-view（Selector 子组件）
-//  胶囊形多选切换器，使用 matchedGeometryEffect 让选中态在多个选项间无缝滑动
-//  在 BobaLoyalty 用于"杯型/糖度"切换
+//  ShipSwift Recipe: component-order-view (Selector subcomponent).
+//  Capsule-shaped option switcher; matchedGeometryEffect slides the selection
+//  seamlessly between options. Used in BobaLoyalty for switching size / sugar level.
 //
 
 import SwiftUI

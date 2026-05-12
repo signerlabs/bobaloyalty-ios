@@ -2,8 +2,8 @@
 //  RoleSelectView.swift
 //  BobaLoyalty
 //
-//  首屏角色选择器：奶茶店暖色渐变背景 + "我是顾客" / "我是老板" 两个大按钮
-//  选择后写入 @AppStorage，RootRouterView 自动切换到对应根视图
+//  Initial role selector: warm bubble-tea gradient background + two big buttons ("I'm a customer" / "I'm the owner").
+//  The choice is written to @AppStorage, and RootRouterView automatically switches to the corresponding root view.
 //
 
 import SwiftUI
@@ -14,7 +14,7 @@ struct RoleSelectView: View {
 
     var body: some View {
         ZStack {
-            // 奶茶暖色渐变背景
+            // Warm bubble-tea gradient background
             LinearGradient(
                 colors: [Color("BobaCream"), Color("BobaCaramel")],
                 startPoint: .topLeading,
@@ -25,7 +25,7 @@ struct RoleSelectView: View {
             VStack(spacing: 32) {
                 Spacer()
 
-                // 品牌标题区
+                // Brand title section
                 VStack(spacing: 12) {
                     Image(systemName: "cup.and.saucer.fill")
                         .font(.system(size: 64, weight: .bold))
@@ -42,7 +42,7 @@ struct RoleSelectView: View {
 
                 Spacer()
 
-                // 角色选择按钮
+                // Role selection buttons
                 VStack(spacing: 16) {
                     roleButton(
                         role: .customer,
@@ -70,7 +70,7 @@ struct RoleSelectView: View {
         }
     }
 
-    /// 角色按钮：左 icon + 中标题/副标题 + 右箭头
+    /// Role button: icon on the left + title/subtitle in the middle + chevron on the right
     @ViewBuilder
     private func roleButton(
         role: UserRole,

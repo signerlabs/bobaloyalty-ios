@@ -2,14 +2,14 @@
 //  CustomerRootTabView.swift
 //  BobaLoyalty
 //
-//  顾客端根 TabView：菜单 / 购物车 / 积分 / 我的
-//  四个 tab 全部接入真实页面（任务 #4 #5 #6 完成后接管）
+//  Customer-side root TabView: Menu / Cart / Points / Profile.
+//  All four tabs are wired up to real pages (tasks #4 #5 #6 took over once complete).
 //
-//  参考 ShipSwift Recipe `component-root-tab-view` 模式：
+//  Follows the ShipSwift Recipe `component-root-tab-view` pattern:
 //  - iOS 18+ Tab API
-//  - 选中/未选中 SF Symbol 切换
-//  - .environment(\.symbolVariants, .none) 阻止系统自动填充
-//  - .sensoryFeedback 提供触感反馈
+//  - Selected / unselected SF Symbol swapping
+//  - `.environment(\.symbolVariants, .none)` prevents the system from auto-filling icons
+//  - `.sensoryFeedback` provides haptic feedback
 //
 
 import SwiftUI
@@ -20,7 +20,7 @@ struct CustomerRootTabView: View {
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            // MARK: 菜单
+            // MARK: Menu
             Tab(value: "menu") {
                 NavigationStack { MenuView() }
             } label: {
@@ -32,7 +32,7 @@ struct CustomerRootTabView: View {
                 .environment(\.symbolVariants, .none)
             }
 
-            // MARK: 购物车
+            // MARK: Cart
             Tab(value: "cart") {
                 NavigationStack { CartView() }
             } label: {
@@ -44,7 +44,7 @@ struct CustomerRootTabView: View {
                 .environment(\.symbolVariants, .none)
             }
 
-            // MARK: 积分
+            // MARK: Points
             Tab(value: "points") {
                 NavigationStack { PointsView() }
             } label: {

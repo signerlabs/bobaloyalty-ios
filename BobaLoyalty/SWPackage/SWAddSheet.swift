@@ -2,9 +2,10 @@
 //  SWAddSheet.swift
 //  BobaLoyalty
 //
-//  ShipSwift Recipe: component-add-sheet
-//  底部 medium detent sheet，带文本输入 + 取消/继续按钮。
-//  在老板设置里用于"群发促销券"输入券面额（也可输入任意短文本场景）。
+//  ShipSwift Recipe: component-add-sheet.
+//  A medium-detent bottom sheet with a text input plus Cancel / Confirm buttons.
+//  Used by the owner-side settings to enter the face value when broadcasting a promo
+//  coupon (and works for any short-text input scenario).
 //
 
 import SwiftUI
@@ -58,7 +59,7 @@ struct SWAddSheet: View {
         .presentationDragIndicator(.visible)
     }
 
-    // MARK: - 私有输入框
+    // MARK: - Private input field
 
     private struct InputField: View {
         @Binding var text: String

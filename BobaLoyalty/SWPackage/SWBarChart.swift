@@ -2,12 +2,12 @@
 //  SWBarChart.swift
 //  BobaLoyalty
 //
-//  ShipSwift Recipe: chart-bar-chart
-//  基于 Swift Charts BarMark 的可横向滚动条形图。
-//  - 支持分组 / 堆叠两种显示模式
-//  - 多系列分类着色
-//  - 可选数值标签
-//  - 入场动画：bars 从 0 缓慢长到目标值（easeOut 1.2s）
+//  ShipSwift Recipe: chart-bar-chart.
+//  Horizontally scrollable bar chart built on Swift Charts BarMark.
+//  - Supports both grouped and stacked display modes
+//  - Per-category coloring for multi-series data
+//  - Optional value labels
+//  - Entrance animation: bars grow from 0 to their target values (easeOut, 1.2s)
 //
 
 import SwiftUI
@@ -16,17 +16,17 @@ import Charts
 // MARK: - SWBarChart
 
 struct SWBarChart<CategoryType: Hashable & Plottable>: View {
-    // MARK: - 枚举
+    // MARK: - Enums
 
-    /// 多系列条形图显示模式
+    /// Display mode for multi-series bars
     enum StackMode {
-        /// 同日期分桶内并排
+        /// Side-by-side within the same date bucket
         case grouped
-        /// 同日期分桶内堆叠
+        /// Stacked within the same date bucket
         case stacked
     }
 
-    // MARK: - 数据模型
+    // MARK: - Data model
 
     struct DataPoint: Identifiable {
         let id: UUID
@@ -42,7 +42,7 @@ struct SWBarChart<CategoryType: Hashable & Plottable>: View {
         }
     }
 
-    // MARK: - 属性
+    // MARK: - Properties
 
     let dataPoints: [DataPoint]
     let colorMapping: [CategoryType: Color]
@@ -57,12 +57,12 @@ struct SWBarChart<CategoryType: Hashable & Plottable>: View {
     var chartHeight: CGFloat = 200
     var title: String? = nil
 
-    /// 入场动画进度（0~1），bars 的 y 值乘以该值实现"从 0 长出"效果
+    /// Entrance animation progress (0–1); each bar's y value is multiplied by this to achieve the "grow from 0" effect
     @State private var animationProgress: Double = 0
 
-    // MARK: - 计算属性
+    // MARK: - Computed properties
 
-    /// 真实数据范围（动画期间保持稳定，避免 Y 轴随动画刷新）
+    /// Effective Y domain (stays stable during the animation to avoid the Y axis jittering with each frame)
     private var effectiveYDomain: ClosedRange<Double>? {
         if let yDomain = yDomain { return yDomain }
         guard !dataPoints.isEmpty else { return nil }
@@ -88,7 +88,7 @@ struct SWBarChart<CategoryType: Hashable & Plottable>: View {
         return startDate...endDate
     }
 
-    /// 初始滚动位置：今天居中
+    /// Initial scroll position: center on today
     private var chartInitialScrollDate: Date {
         let calendar = Calendar.current
         let startOfToday = calendar.startOfDay(for: Date())
@@ -165,7 +165,7 @@ struct SWBarChart<CategoryType: Hashable & Plottable>: View {
         }
     }
 
-    // MARK: - 私有辅助
+    // MARK: - Private helpers
 
     @ViewBuilder
     private func valueLabel(for point: DataPoint) -> some View {
@@ -177,7 +177,7 @@ struct SWBarChart<CategoryType: Hashable & Plottable>: View {
     }
 }
 
-// MARK: - Y 轴 domain 辅助
+// MARK: - Y-axis domain helper
 
 private extension View {
     @ViewBuilder
@@ -190,7 +190,7 @@ private extension View {
     }
 }
 
-// MARK: - String 分类的便利初始化
+// MARK: - Convenience initializer for String-based categories
 
 extension SWBarChart where CategoryType == String {
     init(

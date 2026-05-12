@@ -2,13 +2,13 @@
 //  SWRootTabView.swift
 //  BobaLoyalty
 //
-//  ShipSwift Recipe: component-root-tab-view
-//  iOS 18+ Tab API 模板：选中/未选中图标切换 + 触觉反馈
-//  关键：.environment(\.symbolVariants, .none) 阻止系统自动填充图标
+//  ShipSwift Recipe: component-root-tab-view.
+//  iOS 18+ Tab API template: selected/unselected icon swapping + haptic feedback.
+//  Key detail: `.environment(\.symbolVariants, .none)` prevents the system from auto-filling icons.
 //
-//  在 BobaLoyalty 中我们不直接用本文件，而是参考此模式实现两套
-//  CustomerRootTabView / OwnerRootTabView，把"选中态切换 + 触觉反馈"
-//  这些 ShipSwift 沉淀的细节直接复用。本文件保留作为模板参照。
+//  In BobaLoyalty we don't use this file directly; instead, we follow this pattern to
+//  build CustomerRootTabView and OwnerRootTabView, reusing the "selected-state swap +
+//  haptic feedback" details distilled from ShipSwift. This file is kept as a reference template.
 //
 
 import SwiftUI

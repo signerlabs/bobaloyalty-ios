@@ -1,50 +1,49 @@
-# BobaLoyalty 极简 PRD
+# BobaLoyalty — Minimal PRD
 
-> 奶茶店点单 App，作为 2026-05-12 ShipSwift 视频录屏素材源。
-> 视频脚本：`1-1-signerlabs-marketing/projects/shipswift/posts/2026-05-12-视频脚本-vibecoding一个奶茶店点单App.md`
+> Bubble tea shop loyalty app. Source material for the ShipSwift video walkthrough released on 2026-05-12.
 
-## 给谁用
+## Who It's For
 
-开实体奶茶店的老板。替代市面 SaaS 月费系统（市面 SaaS 月费贵、数据还不属于老板自己）。
+Brick-and-mortar bubble tea shop owners. A replacement for the off-the-shelf monthly-fee SaaS systems on the market (expensive, and your data isn't really yours).
 
-## 双端角色
+## Dual Roles
 
-- **顾客端（C 端，主战场）**：进店扫码 → 看菜单 → 下单支付 → 攒积分 → 收生日券
-- **老板端（B 端，简化版）**：菜单管理 + 群发生日券 + 看营收
+- **Customer side (consumer, primary battleground)**: scan in-store QR code → browse menu → place + pay → earn points → receive birthday coupons
+- **Owner side (B-side, simplified)**: menu management + bulk birthday coupon broadcast + revenue dashboard
 
-## 6 个核心模块
+## 6 Core Modules
 
-| # | 模块 | 顾客端 | 老板端 |
+| # | Module | Customer Side | Owner Side |
 |---|------|--------|--------|
-| 1 | 登录 | 匿名优先扫码即开卡（不强制留手机号） | Apple 登录 |
-| 2 | 菜单 | 分类菜单浏览（图片 + 名称 + 价格 + 规格） | 可编辑商品（图片 + 名称 + 价格 + 规格如冰/糖度 + 分类） |
-| 3 | 点单 + 支付 | 选商品 → 加购物车 → 选规格 → 下单 → 微信/支付宝支付 | 看实时订单 |
-| 4 | 积分 | 每杯 +10 分，满 100 分换一杯免费 | 看会员积分总览 |
-| 5 | 生日券 | 收券 + 核销 | 一键群发生日券 |
-| 6 | 消费记录 | 看自己历史订单 | 看每日营收 |
+| 1 | Login | Anonymous-first, scan QR to instantly issue membership card (phone number not required) | Apple Sign In |
+| 2 | Menu | Browse by category (image + name + price + spec) | Editable products (image + name + price + spec like ice/sugar + category) |
+| 3 | Order + Pay | Pick → add to cart → choose spec → place → pay via WeChat/Alipay | View live orders |
+| 4 | Points | +10 per cup, free cup at 100 | View member point totals |
+| 5 | Birthday Coupon | Receive + redeem | One-tap bulk birthday coupon broadcast |
+| 6 | Purchase History | View own past orders | View daily revenue |
 
-## 技术栈
+## Tech Stack
 
 - **iOS 17+ SwiftUI**
-- **必须用 ShipSwift Recipe 开发**，最大化复用组件（登录 / 支付 / 列表卡片 / 表单等已有模块直接拼）
-- 后端走 ShipSwift 标准 infra-cdk（Cognito 匿名认证 + DynamoDB + StoreKit）
+- **Must build on ShipSwift recipes** — maximize component reuse (login / payment / list cards / forms etc. all snap together from existing modules)
+- Backend (out of scope for this open-sourced demo, see PRD only): would use ShipSwift's standard `infra-cdk` recipe (Cognito anonymous auth + DynamoDB + StoreKit). The open-source build is local SwiftData mock only.
 
-## 视觉风格
+## Visual Style
 
-- 主色：奶茶店暖色系（米黄 / 焦糖 / 奶茶棕）
-- 素材：补充奶茶相关图片（unsplash 抓 / AI 生图都行）
+- Primary: warm tea-shop tones (ivory / caramel / milk-tea brown)
+- Assets: bubble tea photography (Unsplash CC0 or AI-generated)
 
-## MVP 范围
+## MVP Scope
 
-**先做这些**：
-- 点单 + 积分 + 生日券 闭环跑通
-- 顾客端 UI 完整可演示
-- 老板端 MVP（菜单编辑 + 群发券 + 营收看板）
+**In scope**:
+- End-to-end loop: order + points + birthday coupon
+- Complete demoable customer-side UI
+- Owner-side MVP (menu edit + coupon broadcast + revenue dashboard)
 
-**不做**：
-- 外卖配送、跨店连锁、复杂会员等级、外送骑手系统
-- 生产级稳健性（无需 e2e 测试、无需 CI、无需精细化错误处理）
+**Out of scope**:
+- Delivery, multi-store chains, complex membership tiers, courier dispatch
+- Production-grade robustness (no e2e tests, no CI, no precise error handling)
 
-## 工程目的
+## Engineering Goal
 
-作为 5/12 视频录屏素材源，主公会用 Cursor / Claude Code 跑一遍生成过程录屏 + 上手把玩成品 App。**重点是"AI 能拼出来 + 看起来像真 App"，不需要生产级稳健性**。
+Source material for the 2026-05-12 video walkthrough — the model runs through a fresh generation pass on Cursor / Claude Code while the final app is demoed live. **The point is "AI can compose this + it looks like a real app"** — production-grade robustness is not required.

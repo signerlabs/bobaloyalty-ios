@@ -2,12 +2,12 @@
 //  SWLineChart.swift
 //  BobaLoyalty
 //
-//  ShipSwift Recipe: chart-line-chart
-//  基于 Swift Charts LineMark 的可横向滚动多系列折线图。
-//  - 支持参考线（RuleMark）
-//  - 可配置插值方式（linear / catmullRom / stepCenter 等）
-//  - 可选 PointMark 数据点高亮
-//  - 入场动画：值从 0 长到目标
+//  ShipSwift Recipe: chart-line-chart.
+//  Horizontally scrollable multi-series line chart built on Swift Charts LineMark.
+//  - Supports reference lines (RuleMark)
+//  - Configurable interpolation (linear / catmullRom / stepCenter, etc.)
+//  - Optional PointMark dot highlights
+//  - Entrance animation: values grow from 0 to their targets
 //
 
 import SwiftUI
@@ -16,7 +16,7 @@ import Charts
 // MARK: - SWLineChart
 
 struct SWLineChart<CategoryType: Hashable & Plottable>: View {
-    // MARK: - 数据模型
+    // MARK: - Data model
 
     struct DataPoint: Identifiable {
         let id: UUID
@@ -32,7 +32,7 @@ struct SWLineChart<CategoryType: Hashable & Plottable>: View {
         }
     }
 
-    /// 水平参考线（RuleMark）
+    /// Horizontal reference line (RuleMark)
     struct ReferenceLine {
         let value: Double
         let label: String?
@@ -52,7 +52,7 @@ struct SWLineChart<CategoryType: Hashable & Plottable>: View {
         }
     }
 
-    // MARK: - 属性
+    // MARK: - Properties
 
     let dataPoints: [DataPoint]
     let colorMapping: [CategoryType: Color]
@@ -67,10 +67,10 @@ struct SWLineChart<CategoryType: Hashable & Plottable>: View {
     var chartHeight: CGFloat = 200
     var title: String? = nil
 
-    /// 入场动画进度
+    /// Entrance animation progress
     @State private var animationProgress: Double = 0
 
-    // MARK: - 计算属性
+    // MARK: - Computed properties
 
     private var effectiveYDomain: ClosedRange<Double>? {
         if let yDomain = yDomain { return yDomain }
@@ -87,7 +87,7 @@ struct SWLineChart<CategoryType: Hashable & Plottable>: View {
         return startDate...endDate
     }
 
-    /// 初始滚动位置：最新数据靠右
+    /// Initial scroll position: anchor the newest data to the right edge
     private var chartInitialScrollDate: Date {
         let calendar = Calendar.current
         let startOfToday = calendar.startOfDay(for: Date())
@@ -173,7 +173,7 @@ struct SWLineChart<CategoryType: Hashable & Plottable>: View {
     }
 }
 
-// MARK: - Y 轴 domain 辅助
+// MARK: - Y-axis domain helper
 
 private extension View {
     @ViewBuilder
@@ -186,7 +186,7 @@ private extension View {
     }
 }
 
-// MARK: - String 分类的便利初始化
+// MARK: - Convenience initializer for String-based categories
 
 extension SWLineChart where CategoryType == String {
     init(

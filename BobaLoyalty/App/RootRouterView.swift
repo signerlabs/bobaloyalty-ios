@@ -2,10 +2,10 @@
 //  RootRouterView.swift
 //  BobaLoyalty
 //
-//  根路由：根据 @AppStorage("userRole") 决定显示哪个根视图
-//  - 未选择 → RoleSelectView（角色选择器）
-//  - customer → CustomerRootTabView（顾客端 4-Tab）
-//  - owner → OwnerRootTabView（老板端 4-Tab）
+//  Root router: picks which root view to show based on @AppStorage("userRole").
+//  - unset    → RoleSelectView (role selector)
+//  - customer → CustomerRootTabView (customer-side 4-tab)
+//  - owner    → OwnerRootTabView (owner-side 4-tab)
 //
 
 import SwiftUI

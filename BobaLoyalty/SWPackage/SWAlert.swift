@@ -2,9 +2,9 @@
 //  SWAlert.swift
 //  BobaLoyalty
 //
-//  ShipSwift Recipe: component-alert
-//  全局 Toast 通知组件，支持 4 种预设风格 (info / success / warning / error)
-//  使用方式：在 App 入口加 .swAlert()，业务代码 SWAlertManager.shared.show(.success, message: "...")
+//  ShipSwift Recipe: component-alert.
+//  Global toast notification component with 4 preset styles (info / success / warning / error).
+//  Usage: attach `.swAlert()` at the App's root, then call `SWAlertManager.shared.show(.success, message: "...")` from business code.
 //
 
 import SwiftUI
@@ -71,7 +71,7 @@ final class SWAlertManager {
 
     // MARK: - Public Methods (LocalizedStringKey)
 
-    /// 弹出预设类型的 alert (LocalizedStringKey，推荐用于静态文案)
+    /// Show a preset-type alert (LocalizedStringKey; recommended for static copy)
     func show(_ type: SWAlertType, message: LocalizedStringKey, duration: Duration = .seconds(2)) {
         showInternal(
             icon: type.icon,
@@ -83,7 +83,7 @@ final class SWAlertManager {
         )
     }
 
-    /// 弹出自定义样式的 alert (LocalizedStringKey)
+    /// Show a custom-style alert (LocalizedStringKey)
     func show(
         icon: String,
         message: LocalizedStringKey,
@@ -104,7 +104,7 @@ final class SWAlertManager {
 
     // MARK: - Public Methods (String)
 
-    /// 弹出预设类型的 alert (String，用于动态文案，如 API 错误)
+    /// Show a preset-type alert (String; use for dynamic copy such as API errors)
     func show(_ type: SWAlertType, message: String, duration: Duration = .seconds(2)) {
         showInternal(
             icon: type.icon,
@@ -116,7 +116,7 @@ final class SWAlertManager {
         )
     }
 
-    /// 弹出自定义样式的 alert (String)
+    /// Show a custom-style alert (String)
     func show(
         icon: String,
         message: String,
@@ -214,7 +214,7 @@ private struct SWAlertModifier: ViewModifier {
 // MARK: - View Extension
 
 extension View {
-    /// 在 App 入口处挂载全局 toast 支持
+    /// Attach global toast support at the App's root
     func swAlert() -> some View {
         modifier(SWAlertModifier())
     }

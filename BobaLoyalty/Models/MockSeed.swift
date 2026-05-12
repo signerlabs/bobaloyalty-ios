@@ -2,8 +2,8 @@
 //  MockSeed.swift
 //  BobaLoyalty
 //
-//  本地 mock 数据种子：8 个商品 + 1 个匿名会员 + 30 天历史订单
-//  在 App 启动时检测空库自动 seed，第二次启动跳过
+//  Local mock data seed: 8 products + 1 anonymous member + 30 days of historical orders.
+//  Auto-seeds on launch when the store is empty; later launches skip seeding.
 //
 
 import Foundation
@@ -12,28 +12,28 @@ import SwiftData
 @MainActor
 enum MockSeed {
 
-    /// 主入口：检测空库则灌入种子数据
+    /// Main entry point: seeds data when the store is empty
     static func seedIfNeeded(in context: ModelContext) {
         do {
             let productCount = try context.fetchCount(FetchDescriptor<Product>())
             guard productCount == 0 else { return }
 
-            // 1. 商品
+            // 1. Products
             let products = seedProducts()
             for p in products { context.insert(p) }
 
-            // 2. 匿名会员
+            // 2. Anonymous member
             let customer = seedCustomer()
             context.insert(customer)
 
-            // 3. 30 天历史订单（让营收看板和消费记录有数据可看）
+            // 3. 30 days of historical orders (so the revenue dashboard and purchase history have data)
             let orders = seedHistoricalOrders(products: products, customer: customer)
             for o in orders { context.insert(o) }
 
-            // 4. 累加积分到会员
+            // 4. Accumulate earned points on the member
             customer.totalPoints = orders.reduce(0) { $0 + $1.pointsEarned }
 
-            // 5. 一张未核销的促销券
+            // 5. One unredeemed promo coupon
             let promo = Coupon(
                 kind: .promo,
                 title: "招牌奶茶 -5 元",
@@ -45,11 +45,11 @@ enum MockSeed {
 
             try context.save()
         } catch {
-            print("[MockSeed] 种子数据写入失败：\(error)")
+            print("[MockSeed] Failed to write seed data: \(error)")
         }
     }
 
-    // MARK: - 商品
+    // MARK: - Products
 
     private static func seedProducts() -> [Product] {
         [
@@ -107,7 +107,7 @@ enum MockSeed {
         ]
     }
 
-    // MARK: - 匿名会员
+    // MARK: - Anonymous member
 
     private static func seedCustomer() -> Customer {
         let nickname = "奶茶达人 #\(Int.random(in: 1000...9999))"
@@ -118,7 +118,7 @@ enum MockSeed {
         )
     }
 
-    // MARK: - 历史订单（30 天内随机生成 24 单）
+    // MARK: - Historical orders (random ~24 orders across the last 30 days)
 
     private static func seedHistoricalOrders(
         products: [Product],
@@ -129,7 +129,7 @@ enum MockSeed {
         var orders: [Order] = []
 
         for dayOffset in 0..<30 {
-            // 每天 0~2 单，做出"高峰日 / 平淡日"的真实感
+            // 0~2 orders per day to simulate "busy days vs. slow days"
             let dailyOrderCount = Int.random(in: 0...2)
             for _ in 0..<dailyOrderCount {
                 let baseDate = calendar.date(byAdding: .day, value: -dayOffset, to: .now) ?? .now
@@ -142,7 +142,7 @@ enum MockSeed {
                     of: baseDate
                 ) ?? baseDate
 
-                // 1~3 杯
+                // 1~3 cups
                 let cupCount = Int.random(in: 1...3)
                 var lines: [OrderLine] = []
                 for _ in 0..<cupCount {

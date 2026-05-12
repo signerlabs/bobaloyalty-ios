@@ -2,18 +2,18 @@
 //  SWLoading.swift
 //  BobaLoyalty
 //
-//  ShipSwift Recipe: component-loading
-//  全屏 page-level loading：模糊背景 + 可选 SF Symbol 脉冲动效 + 可定制文案 + ProgressView
-//  每个页面独立 loading 状态，通过 SWLoadingPage enum 隔离
+//  ShipSwift Recipe: component-loading.
+//  Full-screen page-level loading: blurred background + optional pulsing SF Symbol + customizable copy + ProgressView.
+//  Each page has its own loading state, isolated via the SWLoadingPage enum.
 //
-//  BobaLoyalty 中已扩展 .checkout / .cart 两个页面 case
+//  In BobaLoyalty, two additional cases — .checkout and .cart — are already registered.
 //
 
 import SwiftUI
 
 // MARK: - Page Loading State
 
-/// 单页 loading 状态
+/// Per-page loading state
 struct SWPageLoadingState {
     var isShowing: Bool = false
     var message: String = "Loading..."
@@ -22,14 +22,14 @@ struct SWPageLoadingState {
 
 // MARK: - Page Identifier
 
-/// 页面标识 enum —— BobaLoyalty 用到的页面在此注册
+/// Page identifier enum — register every BobaLoyalty page that uses page-level loading here
 enum SWLoadingPage: String {
     case home
     case settings
     case profile
-    case checkout      // 结算页 mock 支付
-    case cart          // 购物车
-    case menu          // 菜单
+    case checkout      // Checkout page mock-payment
+    case cart          // Cart
+    case menu          // Menu
 }
 
 // MARK: - SWLoadingManager
@@ -45,22 +45,22 @@ final class SWLoadingManager {
 
     // MARK: - Page-level Loading
 
-    /// 显示 page loading overlay
+    /// Show the page-loading overlay
     func show(page: SWLoadingPage, message: String = "Loading...", systemImage: String? = nil) {
         pageStates[page] = SWPageLoadingState(isShowing: true, message: message, systemImage: systemImage)
     }
 
-    /// 更新 loading 文案
+    /// Update the loading message
     func updateMessage(page: SWLoadingPage, message: String) {
         pageStates[page]?.message = message
     }
 
-    /// 隐藏 page loading overlay
+    /// Hide the page-loading overlay
     func hide(page: SWLoadingPage) {
         pageStates[page]?.isShowing = false
     }
 
-    /// 取页面 loading 状态
+    /// Read the loading state for a page
     func state(for page: SWLoadingPage) -> SWPageLoadingState {
         pageStates[page] ?? SWPageLoadingState()
     }
@@ -124,7 +124,7 @@ private struct SWPageLoadingModifier: ViewModifier {
 // MARK: - View Extension
 
 extension View {
-    /// 给视图挂载 page-level loading 支持
+    /// Attach page-level loading support to this view
     func swPageLoading(_ page: SWLoadingPage) -> some View {
         modifier(SWPageLoadingModifier(page: page))
     }

@@ -2,8 +2,9 @@
 //  CartItem.swift
 //  BobaLoyalty
 //
-//  购物车项：用户选好的某款商品 + 规格 + 数量
-//  与 Product 是多对一引用关系；下单后转为 OrderLine 嵌入 Order。
+//  Cart item: a product the user has selected + size/sugar/add-ons + quantity.
+//  Has a many-to-one reference to Product; on checkout it is converted into an
+//  OrderLine embedded in an Order.
 //
 
 import Foundation
@@ -12,19 +13,19 @@ import SwiftData
 @Model
 final class CartItem {
     @Attribute(.unique) var id: UUID
-    /// 引用商品；用 Optional 防止商品被删后购物车整体崩溃
+    /// Referenced product; Optional so the cart doesn't crash if a product is deleted
     var product: Product?
-    /// 已选规格（中杯 / 大杯）
+    /// Chosen size (e.g. medium / large)
     var size: String
-    /// 已选糖度（无糖 / 三分糖等）
+    /// Chosen sugar level (e.g. zero / 30% / 50%)
     var sugar: String
-    /// 加料（珍珠 / 椰果 / 布丁），可为空
+    /// Add-ons (pearls / coconut jelly / pudding, etc.); may be empty
     var addons: [String]
-    /// 数量
+    /// Quantity
     var quantity: Int
-    /// 该规格的单价（避免后续商品涨价，购物车里看到的价就是下单价）
+    /// Unit price for the chosen size (locked in so later price changes don't affect what was added to the cart)
     var unitPrice: Double
-    /// 加入购物车时间
+    /// Time added to cart
     var addedAt: Date
 
     init(
@@ -47,7 +48,7 @@ final class CartItem {
         self.addedAt = addedAt
     }
 
-    /// 该项小计
+    /// Line subtotal
     var lineTotal: Double {
         unitPrice * Double(quantity)
     }

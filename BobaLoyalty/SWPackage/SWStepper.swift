@@ -2,9 +2,9 @@
 //  SWStepper.swift
 //  BobaLoyalty
 //
-//  ShipSwift Recipe: component-stepper
-//  紧凑型数量步进器：左右 chevron + 数字 contentTransition + 触觉反馈
-//  数量 = 0 时减号自动 disabled
+//  ShipSwift Recipe: component-stepper.
+//  Compact quantity stepper: chevrons on either side, a numeric contentTransition,
+//  and haptic feedback. The minus button auto-disables when quantity reaches 0.
 //
 
 import SwiftUI

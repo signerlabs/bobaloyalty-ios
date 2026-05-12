@@ -1,188 +1,220 @@
-# BobaLoyalty
+<div align="center">
 
-> 奶茶店点单 App。**2026-05-12 ShipSwift 视频录屏素材源**——展示「AI 一句话拼出 14 个生产级 SwiftUI 组件 + 一个看起来像真 App 的双端 demo」。
+### ⭐ Built with [**ShipSwift**](https://github.com/signerlabs/ShipSwift) — the open-source Swift recipe library for vibe-coding iOS apps
 
-需求文档见 [PRD.md](PRD.md)。视频脚本：`signerlabs/1-1-signerlabs-marketing/projects/shipswift/posts/2026-05-12-视频脚本-vibecoding一个奶茶店点单App.md`。
+**If this demo is useful to you, please [give ShipSwift a ⭐ on GitHub](https://github.com/signerlabs/ShipSwift).**
+*Stars on the main repo are what keep this whole library moving.*
+
+[![Star ShipSwift on GitHub](https://img.shields.io/github/stars/signerlabs/ShipSwift?style=for-the-badge&logo=github&label=Star%20ShipSwift&color=FFD700)](https://github.com/signerlabs/ShipSwift)
+
+</div>
 
 ---
 
-## 工程信息
+# BobaLoyalty
 
-| 项 | 值 |
+> A bubble tea shop loyalty app — vibe-coded in a single afternoon with [ShipSwift](https://github.com/signerlabs/ShipSwift).
+> Source material for the ShipSwift video walkthrough released on 2026-05-12.
+
+Single iOS app, dual roles (customer / shop owner), 14 production-grade SwiftUI components pulled directly from ShipSwift recipes. Zero third-party dependencies, local SwiftData only — no backend, no API keys, clone & run.
+
+---
+
+## Project Info
+
+| Field | Value |
 |---|---|
 | Bundle ID | `com.signerlabs.BobaLoyalty` |
 | Team ID | `5GS4D3667R` |
 | iOS Deployment Target | 26.4 |
-| Swift | 5.0（MainActor 默认隔离） |
-| Xcode 工程组织 | `PBXFileSystemSynchronizedRootGroup`（新增 .swift 文件**无需改 pbxproj**，自动同步进 build target） |
-| 后端 | 无（纯本地 SwiftData mock，无 AWS） |
-| 第三方依赖 | 无（零 SPM/CocoaPods） |
+| Swift | 5.0 (MainActor isolation by default) |
+| Xcode project layout | `PBXFileSystemSynchronizedRootGroup` — new `.swift` files auto-sync into the build target, **no need to touch `project.pbxproj`** |
+| Backend | None (pure local SwiftData mock, no AWS) |
+| Third-party deps | None (zero SPM / CocoaPods) |
 
 ---
 
-## 双端架构
+## Dual-Role Architecture
 
-单 App + 启动角色选择器（@AppStorage 持久化）：
+Single app with a startup role selector (persisted in `@AppStorage`):
 
 ```
 RootRouterView (App/)
-├─ unset      → RoleSelectView   (App/RoleSelectView.swift)
-├─ customer   → CustomerRootTabView   (Customer/)
-│                ├─ 菜单    MenuView          (Menu/)
-│                ├─ 购物车  CartView          (Cart/)
-│                ├─ 积分    PointsView        (Points/)
-│                └─ 我的    ProfileView       (Profile/)
-└─ owner      → OwnerRootTabView      (Owner/)
-                 ├─ 订单    OrdersBoardView   (Orders/)
-                 ├─ 菜单    MenuAdminView     (Menu/)
-                 ├─ 营收    RevenueDashboardView (Revenue/)
-                 └─ 设置    OwnerSettingsView (Settings/)
+├─ unset      → RoleSelectView      (App/RoleSelectView.swift)
+├─ customer   → CustomerRootTabView (Customer/)
+│                ├─ Menu     MenuView         (Menu/)
+│                ├─ Cart     CartView         (Cart/)
+│                ├─ Points   PointsView       (Points/)
+│                └─ Profile  ProfileView      (Profile/)
+└─ owner      → OwnerRootTabView    (Owner/)
+                 ├─ Orders   OrdersBoardView      (Orders/)
+                 ├─ Menu     MenuAdminView        (Menu/)
+                 ├─ Revenue  RevenueDashboardView (Revenue/)
+                 └─ Settings OwnerSettingsView    (Settings/)
 ```
 
-随时通过两端"设置/我的"页的「切换角色」按钮重置 @AppStorage 回到选择器。
+Tap "Switch Role" inside either side's settings to reset `@AppStorage` and return to the selector.
 
 ---
 
-## ShipSwift Recipe 引用清单（14 个）
+## ShipSwift Recipes Used (14)
 
-所有 Recipe 源码原样放在 `BobaLoyalty/SWPackage/`，文件名前缀统一 `SW`，方便录屏时一眼识别"这部分是 ShipSwift 提供的"。
+All recipe source code is dropped verbatim into `BobaLoyalty/SWPackage/` with the `SW` filename prefix so it's instantly recognizable as "this part came from ShipSwift" when watching the video.
 
-| Recipe ID | 文件 | 使用位置 |
+| Recipe ID | File | Used For |
 |---|---|---|
-| `component-alert` | `SWAlert.swift` | 全局 toast：加购成功 / 支付成功 / 切换角色等 |
-| `component-root-tab-view` | `SWRootTabView.swift` | 双端 TabView 模板（iOS 18 Tab API + 选中态 + sensoryFeedback） |
-| `component-tab-button` | `SWTabButton.swift` | 菜单页分类切换 chip |
-| `component-order-view` | `SWOrderView.swift` + `SWOrderSelector.swift` + `SWQuantityControl.swift` | **商品详情页核心**：matchedGeometryEffect 三杯动画 + 糖度/杯型选择 + 数量控制 |
-| `component-stepper` | `SWStepper.swift` | 购物车每行数量 ± |
-| `component-loading` | `SWLoading.swift` | 支付 mock 1 秒全屏遮罩 |
-| `component-search-bar` | `SWSearchBar.swift` | 老板端菜单管理搜索 |
-| `component-add-sheet` | `SWAddSheet.swift` | 老板端「群发券」输入金额 sheet |
-| `chart-ring-chart` | `SWRingChart.swift` | 顾客端积分中心：双环嵌套（距离免费 / 本月杯数） |
-| `chart-bar-chart` | `SWBarChart.swift` | 老板端营收：近 7 天每日营收柱状 |
-| `chart-line-chart` | `SWLineChart.swift` | 老板端营收：近 30 天订单趋势 + 日均参考线 |
-| `chart-donut-chart` | `SWDonutChart.swift` | 老板端营收：商品销量占比甜甜圈 |
+| `component-alert` | `SWAlert.swift` | Global toast — added to cart, payment success, role switched, etc. |
+| `component-root-tab-view` | `SWRootTabView.swift` | Dual-side `TabView` template (iOS 18 Tab API + selection state + sensoryFeedback) |
+| `component-tab-button` | `SWTabButton.swift` | Menu category chips |
+| `component-order-view` | `SWOrderView.swift` + `SWOrderSelector.swift` + `SWQuantityControl.swift` | **Product detail core** — `matchedGeometryEffect` three-cup animation + sugar/size selection + quantity controls |
+| `component-stepper` | `SWStepper.swift` | Cart row quantity ± |
+| `component-loading` | `SWLoading.swift` | Mock 1-second full-screen payment overlay |
+| `component-search-bar` | `SWSearchBar.swift` | Owner-side menu admin search |
+| `component-add-sheet` | `SWAddSheet.swift` | Owner-side broadcast coupon amount sheet |
+| `chart-ring-chart` | `SWRingChart.swift` | Customer points center — concentric dual rings (distance to free / monthly cups) |
+| `chart-bar-chart` | `SWBarChart.swift` | Owner revenue — daily revenue bar chart, last 7 days |
+| `chart-line-chart` | `SWLineChart.swift` | Owner revenue — 30-day order trend line + daily average reference |
+| `chart-donut-chart` | `SWDonutChart.swift` | Owner revenue — product sales share donut |
 
-**组件 ID 全链路一致**：拉 Recipe 用 `mcp__shipswift__getRecipe` + ID。视频里可现场展示「`mcp__shipswift__getRecipe id=component-order-view` → 复制源码 → 用上」的完整流程。
+**Consistent recipe IDs across the stack**: pull a recipe via `mcp__shipswift__getRecipe` + ID. The video shows the full `getRecipe id=component-order-view → copy source → use it` flow live.
 
 ---
 
-## 视觉系统
+## Visual System
 
-### 品牌色板（`Assets.xcassets/Colors/`）
+### Brand Palette (`Assets.xcassets/Colors/`)
 
-| Color Set | 用途 |
+| Color Set | Usage |
 |---|---|
-| `BobaCream` 米黄 | 顾客端背景 |
-| `BobaCaramel` 焦糖 | 主色（AccentColor） |
-| `BobaBrown` 奶茶棕 | 主文字 / 标题 |
-| `BobaPearl` 珍珠白 | 浅米奶白底 |
-| `BobaMatcha` 抹茶绿 | 积分双环内圈 |
-| `BobaPink` 草莓粉 | 「热卖」徽章 |
+| `BobaCream` (warm cream) | Customer-side background |
+| `BobaCaramel` (caramel) | Primary (AccentColor) |
+| `BobaBrown` (milk-tea brown) | Primary text / titles |
+| `BobaPearl` (pearl white) | Soft ivory backdrop |
+| `BobaMatcha` (matcha green) | Points ring inner |
+| `BobaPink` (strawberry pink) | "Hot" badge |
 
-### 商品图（`Assets.xcassets/Drinks/`）
+### Product Images (`Assets.xcassets/Drinks/`)
 
-8 张 [Unsplash](https://unsplash.com) CC0 免费可商用真实奶茶照片：
+8 photos from [Unsplash](https://unsplash.com) — CC0, no attribution required (acknowledgements below).
 
-| 商品 | imageName | Unsplash photo ID |
+| Product | imageName | Unsplash photo ID |
 |---|---|---|
-| 招牌奶茶 | `Drink_NaiCha` | `1741244133076-afcdda4befae`（Gong Cha 黑糖珍珠奶茶） |
-| 珍珠奶茶 | `Drink_ZhenZhu` | `1741243038487-1d835e67bcbf`（Tiger Sugar lineup） |
-| 抹茶拿铁 | `Drink_MoCha` | `1717398804885-a6c22b3e5c2f` |
-| 茉莉奶绿 | `Drink_MoLi` | `1631308491952-040f80133535` |
-| 芋圆奶茶 | `Drink_YuYuan` | `1743310835057-560495386d45` |
-| 烤奶 | `Drink_KaoNai` | `1756132539966-8d65f7a9eed8`（焦糖浪迹） |
-| 杨枝甘露 | `Drink_YangZhi` | `1604298331663-de303fbc7059` |
-| 柠檬果茶 | `Drink_NingMeng` | `1596343540266-130b3dbb1158` |
+| Signature Milk Tea | `Drink_NaiCha` | `1741244133076-afcdda4befae` (Gong Cha black sugar pearl) |
+| Pearl Milk Tea | `Drink_ZhenZhu` | `1741243038487-1d835e67bcbf` (Tiger Sugar lineup) |
+| Matcha Latte | `Drink_MoCha` | `1717398804885-a6c22b3e5c2f` |
+| Jasmine Green Milk | `Drink_MoLi` | `1631308491952-040f80133535` |
+| Taro Ball Milk Tea | `Drink_YuYuan` | `1743310835057-560495386d45` |
+| Roasted Milk | `Drink_KaoNai` | `1756132539966-8d65f7a9eed8` (Caramel) |
+| Mango Pomelo Sago | `Drink_YangZhi` | `1604298331663-de303fbc7059` |
+| Lemon Fruit Tea | `Drink_NingMeng` | `1596343540266-130b3dbb1158` |
 
-`DrinkColors/` 下同名 ColorSet 共存，作为图加载前的兜底底色 + 详情页背景渐变 baseColor。
-
----
-
-## 录屏指引
-
-### 建议演示顺序
-
-1. **角色选择器**（暖色渐变开场）→ 选「我是顾客」
-2. **菜单页**（真实奶茶照片 + 热卖徽章）
-3. **商品详情**（**核心炸场**：糖度/杯型选 → 数量 1→2→3 spring 动画 + matchedGeometryEffect 杯子重排）
-4. **加入购物车 → 购物车列表 → 去结算**
-5. **支付 mock**（微信/支付宝二选一 → SWLoading 1 秒 → 成功 toast）
-6. **积分中心**（双环 1.2 秒 easeOut 动画展开 → 满 100 兑换免费一杯）
-7. **生日券**（设生日近 7 天 → 自动收券）
-8. **设置 → 切换角色 → 进老板端**
-9. **订单流**（实时订单 + 状态徽章流转）
-10. **菜单管理**（搜索 / 编辑 / 上下架）
-11. **营收看板**（**核心炸场**：3 张 Swift Charts 依次入场动画 → 点甜甜圈扇区切换中心数字）
-12. **设置 → 群发生日券**（输入金额 → 给所有会员各发一张）
-
-### 视频核心炸场点（按价值排序）
-
-1. **商品详情 matchedGeometryEffect**：三层奶茶杯 spring 弹动 + 糖度切换背景渐变
-2. **营收看板 3 张图表入场动画**：1.2 秒 easeOut，柱状/折线/甜甜圈依次展开
-3. **积分双环动画**：Apple Watch Activity Rings 风格
-4. **支付 mock 全屏遮罩 + 1 秒 pulse**：看起来很真实
-5. **菜单真奶茶照片**：第一眼就是"哎这是真 App"
-
-### 录屏前 checklist
-
-- [ ] 在 Xcode `Cmd+Shift+K` 清缓存 + `Cmd+B` 验证编译
-- [ ] Simulator 选 iPhone 17 Pro（或主公视频常用型号）
-- [ ] 状态栏时间锁定（`xcrun simctl status_bar ... override --time 9:41`）
-- [ ] 关闭键盘自动弹出/通知（不要打断录屏）
-- [ ] 第一次启动会自动 seed mock 数据（30 天历史订单 + 8 商品 + 1 匿名会员）
-- [ ] 老板端订单 Tab 首次进入会自动注入 4 张活跃订单（OwnerActiveOrderSeed），**录屏顺序建议先 Tab 1（订单）再切其他 Tab**
+Same-named ColorSets under `DrinkColors/` serve as fallback tints before images load, and as the gradient base color on detail pages.
 
 ---
 
-## 文件结构
+## Getting Started
+
+```bash
+git clone https://github.com/signerlabs/bobaloyalty-ios.git
+cd bobaloyalty-ios
+open BobaLoyalty.xcodeproj
+```
+
+In Xcode:
+
+1. Select iPhone 17 Pro Simulator (or any iOS 26.4+ device)
+2. `Cmd+R` to run
+3. On first launch the app auto-seeds mock data: 30 days of order history, 8 products, 1 anonymous member
+4. Owner-side Orders tab injects 4 active orders on first entry (`OwnerActiveOrderSeed`), so visit Orders before other tabs for the best demo flow
+
+No API keys required. No accounts. Pure local SwiftData mock.
+
+---
+
+## Video Demo Order
+
+The video walkthrough roughly follows this path:
+
+1. **Role selector** (warm-gradient opener) → tap "I'm a customer"
+2. **Menu** (real boba photos + "Hot" badge)
+3. **Product detail** (**core wow-moment**: sugar/size selection → quantity 1→2→3 spring animation + `matchedGeometryEffect` cup reshuffle)
+4. **Add to cart → cart list → checkout**
+5. **Mock payment** (WeChat / Alipay → `SWLoading` 1s → success toast)
+6. **Points center** (1.2s ease-out ring animation → redeem free cup at 100)
+7. **Birthday coupon** (set birthday within 7 days → auto-redeemed)
+8. **Settings → Switch role → enter owner side**
+9. **Order board** (live orders + status badge transitions)
+10. **Menu admin** (search / edit / archive)
+11. **Revenue dashboard** (**core wow-moment**: 3 Swift Charts animate in sequence → tap donut slice to switch center number)
+12. **Settings → Broadcast birthday coupon** (enter amount → all members receive one)
+
+---
+
+## File Structure
 
 ```
 BobaLoyalty/
-├── BobaLoyaltyApp.swift              # @main + ModelContainer + .swAlert() + MockSeed
+├── BobaLoyaltyApp.swift                  # @main + ModelContainer + .swAlert() + MockSeed
 ├── App/
-│   ├── RootRouterView.swift          # @AppStorage 路由
-│   └── RoleSelectView.swift          # 角色选择器（暖色渐变 + 两按钮）
-├── Customer/                         # 顾客端
-│   ├── CustomerRootTabView.swift     # 4 tab 容器
-│   ├── Components/DrinkThumbnail.swift  # 通用奶茶缩略图（Image + ColorSet 兜底）
+│   ├── RootRouterView.swift              # @AppStorage routing
+│   └── RoleSelectView.swift              # Role selector (warm gradient + two buttons)
+├── Customer/                             # Customer side
+│   ├── CustomerRootTabView.swift         # 4-tab container
+│   ├── Components/DrinkThumbnail.swift   # Reusable drink thumbnail (Image + ColorSet fallback)
 │   ├── Menu/{MenuView, ProductDetailView}.swift
 │   ├── Cart/{CartView, CheckoutView}.swift
 │   ├── Points/PointsView.swift
 │   └── Profile/ProfileView.swift
-├── Owner/                            # 老板端
-│   ├── OwnerRootTabView.swift        # 4 tab 容器
+├── Owner/                                # Owner side
+│   ├── OwnerRootTabView.swift            # 4-tab container
 │   ├── Orders/{OrdersBoardView, OrderRowCard, OrderStatusBadge, OrderDetailView, OwnerActiveOrderSeed}.swift
 │   ├── Menu/{MenuAdminView, ProductEditView}.swift
 │   ├── Revenue/RevenueDashboardView.swift
 │   └── Settings/OwnerSettingsView.swift
-├── Models/                           # SwiftData @Model
+├── Models/                               # SwiftData @Model
 │   ├── {Product, CartItem, Order, Customer, Coupon}.swift
-│   └── MockSeed.swift                # 8 商品 + 1 会员 + 30 天订单
+│   └── MockSeed.swift                    # 8 products + 1 member + 30 days of orders
 ├── Shared/
-│   ├── UserRole.swift                # enum + AppStorageKey
-│   └── Date+RelativeTime.swift       # 中文相对时间
-├── SWPackage/                        # 14 个 ShipSwift Recipe 原样源码
+│   ├── UserRole.swift                    # enum + AppStorageKey
+│   └── Date+RelativeTime.swift           # Relative time formatter
+├── SWPackage/                            # 14 ShipSwift recipes, verbatim
 │   └── SW*.swift
 └── Assets.xcassets/
-    ├── Colors/Boba*.colorset         # 6 个品牌色
-    ├── DrinkColors/Drink_*.colorset  # 8 个商品兜底色
-    └── Drinks/Drink_*.imageset       # 8 张 Unsplash 真奶茶图
+    ├── Colors/Boba*.colorset             # 6 brand colors
+    ├── DrinkColors/Drink_*.colorset      # 8 fallback drink colors
+    └── Drinks/Drink_*.imageset           # 8 Unsplash boba photos
 ```
 
 ---
 
-## 已知陷阱（AI 接手须知）
+## Engineering Constraints
 
-1. **SourceKit 误报**：批量新增 .swift 文件后，IDE 会持续报「Cannot find X in scope」一段时间。这是 `PBXFileSystemSynchronizedRootGroup` 索引追不上跨文件类型解析的已知问题——**真编译会过**，不要因此乱改代码
-2. **每个用 SwiftData API 的文件必须 `import SwiftData`**（早期漏过 3 处导致主公手动报编译错才发现）
-3. **不要跑 `xcodebuild`**——主公在 Xcode/Simulator 里测试
-4. **不要修 pbxproj**——`PBXFileSystemSynchronizedRootGroup` 自动同步整个 `BobaLoyalty/` 目录
-5. **不要 git commit/push**——主公自己提交（详见 `~/.claude/projects/-Users-m4pro-coding-signerlabs/memory/feedback_no_auto_commit.md`）
-6. **不要引入第三方依赖**——零 SPM/CocoaPods 是设计目标
-7. **录屏顺序约束**：老板端订单 Tab 1 首次进入才注入活跃订单（OwnerActiveOrderSeed），先看 Tab 1 再切其他
+- **No `xcodebuild`** — build via Xcode / Simulator
+- **No `pbxproj` edits** — `PBXFileSystemSynchronizedRootGroup` auto-syncs the entire `BobaLoyalty/` directory
+- **No third-party dependencies** — zero SPM / CocoaPods is a design goal
+- **Every file using SwiftData APIs must `import SwiftData`** at the top — easy to forget, breaks the build
+- **SourceKit "Cannot find X in scope" warnings are often false positives** after bulk file additions — index lags, real compilation passes
+- **Demo order constraint**: owner-side Orders tab injects active orders only on first entry (`OwnerActiveOrderSeed`). Visit Orders before other tabs for the demo.
 
 ---
 
-## 致谢
+## Built with Claude Code + ShipSwift
 
-商品图来自 [Unsplash](https://unsplash.com)，CC0 免费可商用，无需 attribution。摄影师致谢见各 photo ID 对应的 `unsplash.com/photos/{id}` 页面。
+This entire app was vibe-coded in a single afternoon using [Claude Code](https://claude.com/claude-code) + ShipSwift recipes — no manual UI code from scratch. The 14 recipes above were dropped in verbatim via the ShipSwift MCP server, and the surrounding business logic was generated through natural-language collaboration with the model.
+
+If you want to learn the workflow:
+
+- ShipSwift main repo: [signerlabs/ShipSwift](https://github.com/signerlabs/ShipSwift)
+- Try a recipe yourself: `mcp__shipswift__searchRecipes` or browse the recipe gallery
+
+---
+
+## Acknowledgements
+
+Product images are from [Unsplash](https://unsplash.com), CC0 (no attribution required). Photographer credits available on each photo's `unsplash.com/photos/{id}` page.
+
+---
+
+## License
+
+MIT — see [LICENSE](LICENSE).

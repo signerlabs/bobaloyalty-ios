@@ -2,8 +2,8 @@
 //  OwnerRootTabView.swift
 //  BobaLoyalty
 //
-//  老板端根 TabView：订单 / 菜单管理 / 营收 / 设置
-//  与 CustomerRootTabView 共用 ShipSwift Recipe `component-root-tab-view` 的样式约定
+//  Owner-side root TabView: Orders / Menu admin / Revenue / Settings.
+//  Shares the style conventions of ShipSwift Recipe `component-root-tab-view` with CustomerRootTabView.
 //
 
 import SwiftUI
@@ -14,7 +14,7 @@ struct OwnerRootTabView: View {
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            // MARK: 订单
+            // MARK: Orders
             Tab(value: "orders") {
                 NavigationStack {
                     OrdersBoardView()
@@ -28,7 +28,7 @@ struct OwnerRootTabView: View {
                 .environment(\.symbolVariants, .none)
             }
 
-            // MARK: 菜单管理
+            // MARK: Menu admin
             Tab(value: "menu") {
                 NavigationStack {
                     MenuAdminView()
@@ -42,7 +42,7 @@ struct OwnerRootTabView: View {
                 .environment(\.symbolVariants, .none)
             }
 
-            // MARK: 营收
+            // MARK: Revenue
             Tab(value: "revenue") {
                 NavigationStack {
                     RevenueDashboardView()
@@ -56,7 +56,7 @@ struct OwnerRootTabView: View {
                 .environment(\.symbolVariants, .none)
             }
 
-            // MARK: 设置
+            // MARK: Settings
             Tab(value: "settings") {
                 NavigationStack {
                     OwnerSettingsView()

@@ -2,19 +2,20 @@
 //  Date+RelativeTime.swift
 //  BobaLoyalty
 //
-//  Date 中文相对时间扩展：用于订单卡片显示"3 分钟前 / 1 小时前 / 昨天"等。
-//  共用于顾客端和老板端。
+//  Date extension that formats Chinese relative-time strings, used by order cards
+//  to display values like "3 minutes ago / 1 hour ago / yesterday" in Chinese.
+//  Shared by both the customer and owner sides.
 //
 
 import Foundation
 
 extension Date {
-    /// 中文相对时间描述
-    /// - 60 秒内：刚刚
-    /// - 1 小时内：x 分钟前
-    /// - 24 小时内：x 小时前
-    /// - 同一年内：x 月 x 日
-    /// - 跨年：YYYY 年 x 月 x 日
+    /// Chinese relative-time description
+    /// - within 60 seconds: 刚刚 (just now)
+    /// - within 1 hour:     x 分钟前 (x minutes ago)
+    /// - within 24 hours:   x 小时前 (x hours ago)
+    /// - within same year:  x月x日 (M月d日)
+    /// - across years:      yyyy年x月x日
     var relativeChinese: String {
         let now = Date()
         let interval = now.timeIntervalSince(self)

@@ -2,17 +2,17 @@
 //  SWSearchBar.swift
 //  BobaLoyalty
 //
-//  ShipSwift Recipe: component-search-bar
-//  胶囊形搜索框：放大镜图标 + 输入框 + 一键清空按钮，背景使用 .ultraThinMaterial。
-//  本组件不带外部 horizontal padding，调用方自行 .padding(.horizontal) 控制布局。
+//  ShipSwift Recipe: component-search-bar.
+//  Capsule-shaped search field: magnifier icon + text input + clear button, backed by .ultraThinMaterial.
+//  Does not apply outer horizontal padding; callers should `.padding(.horizontal)` to control layout.
 //
 
 import SwiftUI
 
 struct SWSearchBar: View {
-    /// 双向绑定当前搜索文本
+    /// Two-way binding to the current search text
     @Binding var text: String
-    /// 输入框为空时的占位文案
+    /// Placeholder text when the input is empty
     var placeholder: String = "搜索"
 
     var body: some View {

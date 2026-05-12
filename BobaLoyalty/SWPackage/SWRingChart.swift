@@ -2,15 +2,15 @@
 //  SWRingChart.swift
 //  BobaLoyalty
 //
-//  ShipSwift Recipe: chart-ring-chart
-//  Apple Watch 风格嵌套环形进度图：appear 时各环从 0 弹到目标值
-//  纯 SwiftUI 实现，不依赖 Swift Charts；支持泛型 ViewBuilder 中央内容
+//  ShipSwift Recipe: chart-ring-chart.
+//  Apple Watch-style nested ring progress chart; each ring springs from 0 to its target value on appear.
+//  Pure SwiftUI implementation (no Swift Charts dependency); supports a generic ViewBuilder for the center content.
 //
 
 import SwiftUI
 
 struct SWRingChart<Center: View>: View {
-    // MARK: - 内置数据模型
+    // MARK: - Built-in data model
 
     struct DataPoint: Identifiable {
         let id = UUID()
@@ -21,22 +21,22 @@ struct SWRingChart<Center: View>: View {
 
     // MARK: - Properties
 
-    /// 环数据数组（第一个元素是最外环）
+    /// Ring data array (first element is the outermost ring)
     let data: [DataPoint]
 
-    /// 环的最大量程
+    /// Maximum value the ring represents
     var maxValue: Double = 100
 
-    /// 整体 chart 尺寸
+    /// Overall chart size
     var size: CGFloat = 250
 
-    /// 单环线宽
+    /// Stroke width of a single ring
     var ringWidth: CGFloat = 25
 
-    /// 嵌套环之间的间距
+    /// Spacing between nested rings
     var spacing: CGFloat = 10
 
-    /// 中央内容
+    /// Center content
     @ViewBuilder let center: () -> Center
 
     @State private var animatedValues: [Double]
@@ -69,7 +69,7 @@ struct SWRingChart<Center: View>: View {
                     let ringIndex = CGFloat(data.count - 1 - index)
                     let ringSize = size - ringIndex * (ringWidth + spacing) * 2
 
-                    // 背景环（淡色）
+                    // Background ring (faint color)
                     Circle()
                         .stroke(
                             item.color.opacity(0.15),
@@ -77,7 +77,7 @@ struct SWRingChart<Center: View>: View {
                         )
                         .frame(width: ringSize, height: ringSize)
 
-                    // 进度环
+                    // Progress ring
                     Circle()
                         .trim(from: 0, to: animatedValues[index] / maxValue)
                         .stroke(
@@ -91,7 +91,7 @@ struct SWRingChart<Center: View>: View {
                 center()
             }
 
-            // 图例
+            // Legend
             HStack(spacing: 20) {
                 ForEach(data) { item in
                     BulletPointText(bulletColor: item.color) {
@@ -113,7 +113,7 @@ struct SWRingChart<Center: View>: View {
         }
     }
 
-    // MARK: - 私有子组件
+    // MARK: - Private subcomponent
 
     private struct BulletPointText<Content: View>: View {
         var bulletColor: Color
@@ -132,7 +132,7 @@ struct SWRingChart<Center: View>: View {
     }
 }
 
-// MARK: - 便捷初始化（无 center 内容）
+// MARK: - Convenience initializer (no center content)
 
 extension SWRingChart where Center == EmptyView {
     init(

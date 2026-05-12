@@ -2,9 +2,9 @@
 //  SWQuantityControl.swift
 //  BobaLoyalty
 //
-//  ShipSwift Recipe: component-order-view（QuantityControl 子组件）
-//  超大尺寸 +/- 步进器：白色 ultraThinMaterial 圆形按钮 + numericText 数字过渡
-//  最大 3 杯（与 SWCupView 多杯布局对齐）
+//  ShipSwift Recipe: component-order-view (QuantityControl subcomponent).
+//  Oversized +/- stepper: white ultraThinMaterial circular buttons + numericText number transitions.
+//  Capped at 3 cups (matches the multi-cup layout in SWCupView).
 //
 
 import SwiftUI

@@ -2,9 +2,9 @@
 //  SWTabButton.swift
 //  BobaLoyalty
 //
-//  ShipSwift Recipe: component-tab-button
-//  胶囊形 Tab 按钮：选中（accent 色）/ 未选中（灰色）切换
-//  适合做横向分类筛选条 / 自定义 segmented control
+//  ShipSwift Recipe: component-tab-button.
+//  Capsule-shaped tab button that toggles between selected (accent color) and unselected (gray) states.
+//  Great for horizontal category filter chips or a custom segmented control.
 //
 
 import SwiftUI

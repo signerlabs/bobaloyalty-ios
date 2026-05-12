@@ -2,18 +2,18 @@
 //  SWDonutChart.swift
 //  BobaLoyalty
 //
-//  ShipSwift Recipe: chart-donut-chart
-//  基于 Swift Charts SectorMark 的交互式甜甜圈图。
-//  - 按 Category 分组聚合
-//  - 点击扇区高亮选中（外环放大），中心展示数量与分类名
-//  - 未指定 category 的 Subject 自动归入"未分类"
+//  ShipSwift Recipe: chart-donut-chart.
+//  An interactive donut chart built on Swift Charts SectorMark.
+//  - Aggregates by Category
+//  - Tapping a sector highlights it (outer ring grows); the center shows the count and category name
+//  - Subjects without a category are bucketed as "Uncategorized"
 //
 
 import SwiftUI
 import Charts
 
 struct SWDonutChart: View {
-    // MARK: - 数据模型
+    // MARK: - Data model
 
     struct Category: Identifiable, Hashable {
         let id: UUID
@@ -37,17 +37,17 @@ struct SWDonutChart: View {
         }
     }
 
-    // MARK: - 属性
+    // MARK: - Properties
 
     let subjects: [Subject]
     @Binding var selectedCategory: String?
 
     private static let noCategoryKey = "__no_category__"
 
-    /// 绑定到 Chart 的累计角度
+    /// Cumulative angle bound to the Chart
     @State private var selectedAngle: Int?
 
-    // MARK: - 计算
+    // MARK: - Computed
 
     private var categoryData: [CategoryItem] {
         let grouped = Dictionary(grouping: subjects) { subject -> String in

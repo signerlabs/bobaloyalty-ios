@@ -2,18 +2,18 @@
 //  Coupon.swift
 //  BobaLoyalty
 //
-//  优惠券模型：生日券 / 老板群发促销券
-//  kindRaw 用 String 持久化，方便后期扩展更多券类
+//  Coupon model: birthday coupon / owner-broadcast promo coupon.
+//  `kindRaw` is persisted as a String so more coupon kinds can be added later.
 //
 
 import Foundation
 import SwiftData
 
-// MARK: - 券种
+// MARK: - Coupon kind
 
 enum CouponKind: String, Codable, CaseIterable {
-    case birthday   // 生日券（系统自动派发）
-    case promo      // 促销券（老板群发）
+    case birthday   // Birthday coupon (auto-issued by the system)
+    case promo      // Promo coupon (broadcast by the owner)
 
     var displayName: String {
         switch self {
@@ -35,21 +35,21 @@ enum CouponKind: String, Codable, CaseIterable {
 @Model
 final class Coupon {
     @Attribute(.unique) var id: UUID
-    /// 券种
+    /// Coupon kind
     var kindRaw: String
-    /// 标题（如"生日特饮免费券"）
+    /// Title (e.g. "Free birthday signature drink")
     var title: String
-    /// 优惠值（满减金额或固定折扣）
+    /// Discount value (threshold-discount amount or fixed amount off)
     var discountValue: Double
-    /// 过期时间
+    /// Expiration time
     var expiresAt: Date
-    /// 是否已核销
+    /// Whether it has been redeemed
     var isRedeemed: Bool
-    /// 持有者 ID
+    /// Holder ID
     var customerID: String
-    /// 核销时间（未核销则为 nil）
+    /// Redemption time (nil if not yet redeemed)
     var redeemedAt: Date?
-    /// 派发时间
+    /// Issuance time
     var issuedAt: Date
 
     init(
@@ -74,18 +74,18 @@ final class Coupon {
         self.issuedAt = issuedAt
     }
 
-    /// 类型安全的券种访问器
+    /// Type-safe accessor for the coupon kind
     var kind: CouponKind {
         get { CouponKind(rawValue: kindRaw) ?? .promo }
         set { kindRaw = newValue.rawValue }
     }
 
-    /// 是否已过期
+    /// Whether the coupon has expired
     var isExpired: Bool {
         Date.now > expiresAt
     }
 
-    /// 是否可用（未核销 + 未过期）
+    /// Whether the coupon is usable (not redeemed AND not expired)
     var isUsable: Bool {
         !isRedeemed && !isExpired
     }
