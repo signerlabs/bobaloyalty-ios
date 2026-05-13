@@ -52,3 +52,17 @@ struct OrderStatusBadge: View {
         }
     }
 }
+
+#Preview("All Statuses") {
+    VStack(alignment: .leading, spacing: 14) {
+        ForEach(OrderStatus.allCases, id: \.self) { status in
+            HStack(spacing: 12) {
+                OrderStatusBadge(status: status)
+                Text(status.rawValue)
+                    .font(.caption.monospaced())
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+    .padding(24)
+}

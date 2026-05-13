@@ -181,3 +181,10 @@ struct OrdersBoardView: View {
         }
     }
 }
+
+#Preview("Seeded") {
+    NavigationStack {
+        OrdersBoardView()
+    }
+    .modelContainer(MockSeed.previewContainer)
+}

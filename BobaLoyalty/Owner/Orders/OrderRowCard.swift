@@ -72,3 +72,55 @@ struct OrderRowCard: View {
         .contentShape(Rectangle())
     }
 }
+
+#Preview("Row Card — Pending & Completed") {
+    let sampleLines: [OrderLine] = [
+        OrderLine(
+            productName: "招牌奶茶",
+            size: "大杯",
+            sugar: "五分糖",
+            addons: ["珍珠"],
+            quantity: 2,
+            unitPrice: 19,
+            imageName: "Drink_NaiCha"
+        ),
+        OrderLine(
+            productName: "抹茶拿铁",
+            size: "中杯",
+            sugar: "三分糖",
+            quantity: 1,
+            unitPrice: 18,
+            imageName: "Drink_MoCha"
+        )
+    ]
+    let pending = Order(
+        createdAt: Calendar.current.date(byAdding: .minute, value: -3, to: .now) ?? .now,
+        items: sampleLines,
+        totalAmount: 56,
+        status: .pending,
+        pointsEarned: 30,
+        customerID: UUID().uuidString
+    )
+    let completed = Order(
+        createdAt: Calendar.current.date(byAdding: .hour, value: -2, to: .now) ?? .now,
+        items: [sampleLines[1]],
+        totalAmount: 18,
+        status: .completed,
+        pointsEarned: 10,
+        customerID: UUID().uuidString
+    )
+    return VStack(spacing: 12) {
+        OrderRowCard(order: pending)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+            .background(RoundedRectangle(cornerRadius: 14).fill(Color(.systemBackground)))
+            .overlay(RoundedRectangle(cornerRadius: 14).stroke(.orange.opacity(0.3), lineWidth: 0.8))
+        OrderRowCard(order: completed)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+            .background(RoundedRectangle(cornerRadius: 14).fill(Color(.systemBackground)))
+            .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color("BobaPearl").opacity(0.3), lineWidth: 0.8))
+    }
+    .padding()
+    .background(Color("BobaCream").ignoresSafeArea())
+}

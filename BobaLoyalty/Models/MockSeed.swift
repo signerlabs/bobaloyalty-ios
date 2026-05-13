@@ -118,6 +118,31 @@ enum MockSeed {
         )
     }
 
+    // MARK: - SwiftUI Preview helper
+
+    #if DEBUG
+    /// In-memory model container with seeded mock data, dedicated to `#Preview`.
+    /// Reuses `seedIfNeeded` so previews see the same dataset as a fresh launch.
+    @MainActor
+    static var previewContainer: ModelContainer {
+        let schema = Schema([
+            Product.self,
+            CartItem.self,
+            Order.self,
+            Customer.self,
+            Coupon.self
+        ])
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        do {
+            let container = try ModelContainer(for: schema, configurations: [config])
+            seedIfNeeded(in: container.mainContext)
+            return container
+        } catch {
+            fatalError("[MockSeed] Failed to build preview container: \(error)")
+        }
+    }
+    #endif
+
     // MARK: - Historical orders (random ~24 orders across the last 30 days)
 
     private static func seedHistoricalOrders(

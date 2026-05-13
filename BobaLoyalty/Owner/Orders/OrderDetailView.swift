@@ -240,3 +240,38 @@ struct OrderDetailView: View {
         SWAlertManager.shared.show(.success, message: message)
     }
 }
+
+#Preview("Making Order") {
+    let sampleOrder = Order(
+        createdAt: Calendar.current.date(byAdding: .minute, value: -8, to: .now) ?? .now,
+        items: [
+            OrderLine(
+                productName: "招牌奶茶",
+                size: "大杯",
+                sugar: "五分糖",
+                addons: ["珍珠", "椰果"],
+                quantity: 2,
+                unitPrice: 19,
+                imageName: "Drink_NaiCha"
+            ),
+            OrderLine(
+                productName: "杨枝甘露",
+                size: "中杯",
+                sugar: "三分糖",
+                quantity: 1,
+                unitPrice: 22,
+                imageName: "Drink_YangZhi"
+            )
+        ],
+        totalAmount: 60,
+        status: .making,
+        pointsEarned: 30,
+        customerID: UUID().uuidString
+    )
+    return NavigationStack {
+        OrderDetailView(order: sampleOrder)
+    }
+    .modelContainer(for: [
+        Product.self, CartItem.self, Order.self, Customer.self, Coupon.self
+    ], inMemory: true)
+}

@@ -224,3 +224,10 @@ struct OwnerSettingsView: View {
         return "v\(v) (\(b))"
     }
 }
+
+#Preview("Seeded") {
+    NavigationStack {
+        OwnerSettingsView()
+    }
+    .modelContainer(MockSeed.previewContainer)
+}

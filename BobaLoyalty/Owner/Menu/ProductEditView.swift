@@ -203,3 +203,24 @@ struct ProductEditView: View {
         dismiss()
     }
 }
+
+#Preview("New Product") {
+    ProductEditView(existing: nil)
+        .modelContainer(for: [
+            Product.self, CartItem.self, Order.self, Customer.self, Coupon.self
+        ], inMemory: true)
+}
+
+#Preview("Edit Product") {
+    let sample = Product(
+        name: "招牌奶茶",
+        categoryName: "招牌",
+        price: 16,
+        imageName: "Drink_NaiCha",
+        isOnSale: true
+    )
+    return ProductEditView(existing: sample)
+        .modelContainer(for: [
+            Product.self, CartItem.self, Order.self, Customer.self, Coupon.self
+        ], inMemory: true)
+}

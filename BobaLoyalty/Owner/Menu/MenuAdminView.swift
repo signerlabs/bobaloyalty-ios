@@ -159,3 +159,10 @@ struct MenuAdminView: View {
         )
     }
 }
+
+#Preview("Seeded") {
+    NavigationStack {
+        MenuAdminView()
+    }
+    .modelContainer(MockSeed.previewContainer)
+}

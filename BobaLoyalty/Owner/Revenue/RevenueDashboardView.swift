@@ -329,3 +329,10 @@ struct RevenueDashboardView: View {
         .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 3)
     }
 }
+
+#Preview("Seeded") {
+    NavigationStack {
+        RevenueDashboardView()
+    }
+    .modelContainer(MockSeed.previewContainer)
+}
