@@ -36,7 +36,7 @@ struct MenuAdminView: View {
     var body: some View {
         VStack(spacing: 0) {
             // Search bar
-            SWSearchBar(text: $searchText, placeholder: "搜索商品名 / 分类")
+            SWSearchBar(text: $searchText, placeholder: "Search name / category")
                 .padding(.horizontal)
                 .padding(.top, 8)
                 .padding(.bottom, 6)
@@ -53,7 +53,7 @@ struct MenuAdminView: View {
                             Button(role: .destructive) {
                                 pendingDelete = product
                             } label: {
-                                Label("删除", systemImage: "trash")
+                                Label("Delete", systemImage: "trash")
                             }
                         }
                 }
@@ -62,7 +62,7 @@ struct MenuAdminView: View {
             .scrollContentBackground(.hidden)
         }
         .background(Color("BobaCream").ignoresSafeArea())
-        .navigationTitle("菜单管理")
+        .navigationTitle("Menu Admin")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
@@ -83,21 +83,21 @@ struct MenuAdminView: View {
             ProductEditView(existing: product)
         }
         // Delete confirmation
-        .alert("删除商品", isPresented: Binding(
+        .alert("Delete product", isPresented: Binding(
             get: { pendingDelete != nil },
             set: { if !$0 { pendingDelete = nil } }
         )) {
-            Button("取消", role: .cancel) { pendingDelete = nil }
-            Button("删除", role: .destructive) {
+            Button("Cancel", role: .cancel) { pendingDelete = nil }
+            Button("Delete", role: .destructive) {
                 if let p = pendingDelete {
                     modelContext.delete(p)
-                    SWAlertManager.shared.show(.success, message: "已删除「\(p.name)」")
+                    SWAlertManager.shared.show(.success, message: "Deleted \"\(p.name)\"")
                 }
                 pendingDelete = nil
             }
         } message: {
             if let p = pendingDelete {
-                Text("确认删除「\(p.name)」？此操作不可撤销。")
+                Text("Delete \"\(p.name)\"? This cannot be undone.")
             }
         }
     }
@@ -123,7 +123,7 @@ struct MenuAdminView: View {
                         .font(.subheadline)
                         .fontWeight(.semibold)
                     if product.isOnSale {
-                        Text("热卖")
+                        Text("Hot")
                             .font(.caption2)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
@@ -142,7 +142,7 @@ struct MenuAdminView: View {
             Spacer()
 
             // Listing toggle: binds directly to the SwiftData field so autosave kicks in
-            Toggle("上架", isOn: Binding(
+            Toggle("List", isOn: Binding(
                 get: { product.isOnSale },
                 set: { product.isOnSale = $0 }
             ))

@@ -22,11 +22,11 @@ enum OrderStatus: String, Codable, CaseIterable {
 
     var displayName: String {
         switch self {
-        case .pending:   "待制作"
-        case .making:    "制作中"
-        case .ready:     "待自取"
-        case .completed: "已完成"
-        case .cancelled: "已取消"
+        case .pending:   "Pending"
+        case .making:    "Making"
+        case .ready:     "Ready"
+        case .completed: "Completed"
+        case .cancelled: "Cancelled"
         }
     }
 }

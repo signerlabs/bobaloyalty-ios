@@ -113,21 +113,21 @@ struct SWBarChart<CategoryType: Hashable & Plottable>: View {
             Chart(dataPoints) { point in
                 if stackMode == .grouped {
                     BarMark(
-                        x: .value("日期", point.date, unit: .day),
-                        y: .value("数值", point.value * animationProgress)
+                        x: .value("Date", point.date, unit: .day),
+                        y: .value("Value", point.value * animationProgress)
                     )
-                    .foregroundStyle(by: .value("分类", point.category))
-                    .position(by: .value("分类", point.category))
+                    .foregroundStyle(by: .value("Category", point.category))
+                    .position(by: .value("Category", point.category))
                     .clipShape(RoundedRectangle(cornerRadius: barCornerRadius))
                     .annotation(position: .top) {
                         valueLabel(for: point)
                     }
                 } else {
                     BarMark(
-                        x: .value("日期", point.date, unit: .day),
-                        y: .value("数值", point.value * animationProgress)
+                        x: .value("Date", point.date, unit: .day),
+                        y: .value("Value", point.value * animationProgress)
                     )
-                    .foregroundStyle(by: .value("分类", point.category))
+                    .foregroundStyle(by: .value("Category", point.category))
                     .clipShape(RoundedRectangle(cornerRadius: barCornerRadius))
                     .annotation(position: .top) {
                         valueLabel(for: point)

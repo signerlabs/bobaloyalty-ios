@@ -6,7 +6,7 @@
 //  - Top: nested SWRingChart with two rings
 //      Outer ring (BobaCaramel) = progress toward the next free drink (value = totalPoints % 100, max = 100)
 //      Inner ring (BobaMatcha)  = orders this month (value = monthly order count, max = 20)
-//      Center: large `totalPoints` + small "积分" (points) label
+//      Center: large `totalPoints` + small "points" label
 //  - When totalPoints >= 100, show a "Redeem free drink" button (deducts 100 points and issues a promo coupon)
 //  - My coupons (`@Query var coupons`)
 //  - Recent purchases (`@Query var orders`, reversed)
@@ -62,7 +62,7 @@ struct PointsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
-                Text("我的积分")
+                Text("My Points")
                     .font(.headline)
                     .foregroundStyle(Color("BobaBrown"))
             }
@@ -79,8 +79,8 @@ struct PointsView: View {
 
             SWRingChart(
                 data: [
-                    .init(label: "距离免费", value: progress, color: Color("BobaCaramel")),
-                    .init(label: "本月杯数", value: monthly, color: Color("BobaMatcha"))
+                    .init(label: "To free drink", value: progress, color: Color("BobaCaramel")),
+                    .init(label: "Cups this month", value: monthly, color: Color("BobaMatcha"))
                 ],
                 maxValue: 100,
                 size: 240,
@@ -92,14 +92,14 @@ struct PointsView: View {
                         .font(.system(size: 46, weight: .heavy, design: .rounded))
                         .foregroundStyle(Color("BobaBrown"))
                         .contentTransition(.numericText())
-                    Text("积分")
+                    Text("points")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
             }
 
             if let c = customer {
-                Text("还差 \(c.pointsToNextReward) 分换免费一杯")
+                Text("\(c.pointsToNextReward) more points until a free cup")
                     .font(.subheadline)
                     .foregroundStyle(Color("BobaBrown").opacity(0.75))
             }
@@ -119,7 +119,7 @@ struct PointsView: View {
             } label: {
                 HStack {
                     Image(systemName: "gift.fill")
-                    Text("兑换免费一杯（-100 积分）")
+                    Text("Redeem free cup (-100 pts)")
                         .font(.headline)
                 }
                 .foregroundStyle(.white)
@@ -135,10 +135,10 @@ struct PointsView: View {
 
     private var couponsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            sectionHeader("我的优惠券", icon: "ticket.fill")
+            sectionHeader("My Coupons", icon: "ticket.fill")
 
             if myCoupons.isEmpty {
-                Text("暂无优惠券，多下单即可解锁专属券")
+                Text("No coupons yet — keep ordering to unlock exclusive deals")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, minHeight: 60)
@@ -159,10 +159,10 @@ struct PointsView: View {
 
     private var ordersSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            sectionHeader("最近消费", icon: "clock.arrow.circlepath")
+            sectionHeader("Recent Orders", icon: "clock.arrow.circlepath")
 
             if myOrders.isEmpty {
-                Text("还没有消费记录")
+                Text("No order history yet")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, minHeight: 60)
@@ -183,19 +183,19 @@ struct PointsView: View {
         customer.totalPoints -= 100
         let coupon = Coupon(
             kind: .promo,
-            title: "免费一杯（积分兑换）",
+            title: "Free cup (points redemption)",
             discountValue: 16.0,
             expiresAt: Calendar.current.date(byAdding: .day, value: 30, to: .now) ?? .now,
             customerID: customer.id.uuidString
         )
         modelContext.insert(coupon)
-        SWAlertManager.shared.show(.success, message: "兑换成功，已发券到账")
+        SWAlertManager.shared.show(.success, message: "Redeemed, coupon added to your account")
     }
 
     private func redeemCoupon(_ coupon: Coupon) {
         coupon.isRedeemed = true
         coupon.redeemedAt = .now
-        SWAlertManager.shared.show(.success, message: "已核销：\(coupon.title)")
+        SWAlertManager.shared.show(.success, message: "Used: \(coupon.title)")
     }
 
     private func sectionHeader(_ title: String, icon: String) -> some View {
@@ -245,7 +245,7 @@ private struct CouponRow: View {
                         .padding(.vertical, 2)
                         .background(bgColor.opacity(0.18), in: Capsule())
                         .foregroundStyle(bgColor)
-                    Text("有效期至 \(coupon.expiresAt.formatted(.dateTime.year().month().day()))")
+                    Text("Valid until \(coupon.expiresAt.formatted(.dateTime.year().month().day()))")
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
@@ -253,21 +253,21 @@ private struct CouponRow: View {
             Spacer()
 
             if coupon.isRedeemed {
-                Text("已核销")
+                Text("Used")
                     .font(.caption.bold())
                     .foregroundStyle(.secondary)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 6)
                     .background(Color.secondary.opacity(0.1), in: Capsule())
             } else if coupon.isExpired {
-                Text("已过期")
+                Text("Expired")
                     .font(.caption.bold())
                     .foregroundStyle(.secondary)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 6)
                     .background(Color.secondary.opacity(0.1), in: Capsule())
             } else {
-                Button("使用", action: onUse)
+                Button("Use", action: onUse)
                     .font(.caption.bold())
                     .foregroundStyle(.white)
                     .padding(.horizontal, 14)
@@ -289,9 +289,9 @@ private struct OrderRow: View {
     private var itemSummary: String {
         let names = order.items.map { $0.productName }
         if names.count <= 2 {
-            return names.joined(separator: "、")
+            return names.joined(separator: ", ")
         }
-        return names.prefix(2).joined(separator: "、") + " 等"
+        return names.prefix(2).joined(separator: ", ") + " +more"
     }
 
     var body: some View {
@@ -307,7 +307,7 @@ private struct OrderRow: View {
                     .font(.subheadline.bold())
                     .foregroundStyle(Color("BobaBrown"))
                     .lineLimit(1)
-                Text("\(order.createdAt.formatted(.dateTime.month().day().hour().minute())) · \(order.totalCups) 杯")
+                Text("\(order.createdAt.formatted(.dateTime.month().day().hour().minute())) · \(order.totalCups) cups")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }
@@ -317,7 +317,7 @@ private struct OrderRow: View {
                 Text("¥\(String(format: "%.0f", order.totalAmount))")
                     .font(.subheadline.bold())
                     .foregroundStyle(Color("BobaCaramel"))
-                Text("+\(order.pointsEarned) 分")
+                Text("+\(order.pointsEarned) pts")
                     .font(.caption2)
                     .foregroundStyle(Color("BobaMatcha"))
             }

@@ -13,20 +13,20 @@ import SwiftData
 
 struct MenuView: View {
     @Query(sort: \Product.createdAt) private var products: [Product]
-    @State private var selectedCategory: String = "全部"
+    @State private var selectedCategory: String = "All"
 
-    /// Aggregate categories from products (the literal "全部" / "All" prepended, plus unique categories preserving order)
+    /// Aggregate categories from products ("All" prepended, plus unique categories preserving order)
     private var categories: [String] {
         var ordered: [String] = []
         for p in products where !ordered.contains(p.categoryName) {
             ordered.append(p.categoryName)
         }
-        return ["全部"] + ordered
+        return ["All"] + ordered
     }
 
     /// Products under the currently selected category
     private var filteredProducts: [Product] {
-        if selectedCategory == "全部" {
+        if selectedCategory == "All" {
             return products
         }
         return products.filter { $0.categoryName == selectedCategory }
@@ -50,7 +50,7 @@ struct MenuView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
-                Text("微茶 WeiBoba")
+                Text("WeiBoba")
                     .font(.headline)
                     .foregroundStyle(Color("BobaBrown"))
             }
@@ -69,10 +69,10 @@ struct MenuView: View {
 
             HStack(alignment: .bottom) {
                 VStack(alignment: .leading, spacing: 6) {
-                    Text("今日热卖")
+                    Text("Today's Picks")
                         .font(.caption)
                         .foregroundStyle(Color("BobaBrown").opacity(0.7))
-                    Text("一杯奶茶 一份心意")
+                    Text("One cup of boba, one little kindness")
                         .font(.title2.bold())
                         .foregroundStyle(Color("BobaBrown"))
                 }
@@ -146,7 +146,7 @@ private struct ProductCard: View {
                     .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
 
                 if product.isOnSale {
-                    Text("热卖")
+                    Text("Hot")
                         .font(.caption2.bold())
                         .foregroundStyle(.white)
                         .padding(.horizontal, 8)
@@ -171,7 +171,7 @@ private struct ProductCard: View {
                     Text("\(Int(product.price))")
                         .font(.title3.bold())
                         .foregroundStyle(Color("BobaCaramel"))
-                    Text("起")
+                    Text("up")
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                         .padding(.leading, 2)

@@ -22,17 +22,17 @@ struct ProductEditView: View {
 
     @State private var name: String = ""
     @State private var priceText: String = ""
-    @State private var category: String = "奶茶系列"
+    @State private var category: String = "Milk Tea"
     @State private var imageName: String = "Drink_NaiCha"
-    @State private var selectedSizes: Set<String> = ["中杯", "大杯"]
-    @State private var selectedSugar: Set<String> = ["无糖", "三分糖", "五分糖", "七分糖", "全糖"]
+    @State private var selectedSizes: Set<String> = ["Medium", "Large"]
+    @State private var selectedSugar: Set<String> = ["No Sugar", "30% Sweet", "Half Sweet", "70% Sweet", "Full Sweet"]
     @State private var isOnSale: Bool = false
 
     // MARK: - Option constants
 
-    private let categoryOptions = ["招牌", "奶茶系列", "果茶系列", "拿铁系列", "小食"]
-    private let sizeOptions = ["小杯", "中杯", "大杯", "超大杯"]
-    private let sugarOptions = ["无糖", "三分糖", "五分糖", "七分糖", "全糖"]
+    private let categoryOptions = ["Signature", "Milk Tea", "Fruit Tea", "Latte", "Snacks"]
+    private let sizeOptions = ["Small", "Medium", "Large", "XL"]
+    private let sugarOptions = ["No Sugar", "30% Sweet", "Half Sweet", "70% Sweet", "Full Sweet"]
 
     /// 8 product-color placeholder chips
     private let imageOptions: [String] = [
@@ -41,7 +41,7 @@ struct ProductEditView: View {
     ]
 
     private var isEditing: Bool { existing != nil }
-    private var titleText: String { isEditing ? "编辑商品" : "新增商品" }
+    private var titleText: String { isEditing ? "Edit Product" : "New Product" }
 
     /// Whether the form is valid
     private var canSubmit: Bool {
@@ -55,24 +55,24 @@ struct ProductEditView: View {
         NavigationStack {
             Form {
                 // MARK: Basic info
-                Section("基本信息") {
-                    TextField("商品名称", text: $name)
+                Section("Basics") {
+                    TextField("Product name", text: $name)
                     HStack {
-                        Text("价格")
+                        Text("Price")
                         TextField("0.00", text: $priceText)
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
-                        Text("元")
+                        Text("¥")
                             .foregroundStyle(.secondary)
                     }
-                    Picker("分类", selection: $category) {
+                    Picker("Category", selection: $category) {
                         ForEach(categoryOptions, id: \.self) { Text($0) }
                     }
-                    Toggle("当前热卖", isOn: $isOnSale)
+                    Toggle("Mark as hot", isOn: $isOnSale)
                 }
 
                 // MARK: Placeholder color
-                Section("占位色") {
+                Section("Color") {
                     LazyVGrid(
                         columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 4),
                         spacing: 14
@@ -85,7 +85,7 @@ struct ProductEditView: View {
                 }
 
                 // MARK: Available sizes
-                Section("可选规格") {
+                Section("Sizes") {
                     ForEach(sizeOptions, id: \.self) { size in
                         toggleRow(text: size, isOn: Binding(
                             get: { selectedSizes.contains(size) },
@@ -98,7 +98,7 @@ struct ProductEditView: View {
                 }
 
                 // MARK: Sugar level
-                Section("可选糖度") {
+                Section("Sugar levels") {
                     ForEach(sugarOptions, id: \.self) { sugar in
                         toggleRow(text: sugar, isOn: Binding(
                             get: { selectedSugar.contains(sugar) },
@@ -114,10 +114,10 @@ struct ProductEditView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("取消") { dismiss() }
+                    Button("Cancel") { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("保存") { save() }
+                    Button("Save") { save() }
                         .disabled(!canSubmit)
                 }
             }
@@ -185,7 +185,7 @@ struct ProductEditView: View {
             p.availableSizes = Array(selectedSizes)
             p.availableSugar = Array(selectedSugar)
             p.isOnSale = isOnSale
-            SWAlertManager.shared.show(.success, message: "商品已更新")
+            SWAlertManager.shared.show(.success, message: "Product updated")
         } else {
             // Create new product
             let new = Product(
@@ -198,7 +198,7 @@ struct ProductEditView: View {
                 isOnSale: isOnSale
             )
             modelContext.insert(new)
-            SWAlertManager.shared.show(.success, message: "已新增商品")
+            SWAlertManager.shared.show(.success, message: "Product added")
         }
         dismiss()
     }
@@ -213,8 +213,8 @@ struct ProductEditView: View {
 
 #Preview("Edit Product") {
     let sample = Product(
-        name: "招牌奶茶",
-        categoryName: "招牌",
+        name: "Signature Milk Tea",
+        categoryName: "Signature",
         price: 16,
         imageName: "Drink_NaiCha",
         isOnSale: true

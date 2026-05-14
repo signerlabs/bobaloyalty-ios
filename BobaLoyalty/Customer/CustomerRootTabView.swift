@@ -25,7 +25,7 @@ struct CustomerRootTabView: View {
                 NavigationStack { MenuView() }
             } label: {
                 Label {
-                    Text("菜单")
+                    Text("Menu")
                 } icon: {
                     Image(systemName: selectedTab == "menu" ? "cup.and.saucer.fill" : "cup.and.saucer")
                 }
@@ -37,7 +37,7 @@ struct CustomerRootTabView: View {
                 NavigationStack { CartView() }
             } label: {
                 Label {
-                    Text("购物车")
+                    Text("Cart")
                 } icon: {
                     Image(systemName: selectedTab == "cart" ? "bag.fill" : "bag")
                 }
@@ -49,7 +49,7 @@ struct CustomerRootTabView: View {
                 NavigationStack { PointsView() }
             } label: {
                 Label {
-                    Text("积分")
+                    Text("Points")
                 } icon: {
                     Image(systemName: selectedTab == "points" ? "star.circle.fill" : "star.circle")
                 }
@@ -61,7 +61,7 @@ struct CustomerRootTabView: View {
                 NavigationStack { ProfileView() }
             } label: {
                 Label {
-                    Text("我的")
+                    Text("Me")
                 } icon: {
                     Image(systemName: selectedTab == "profile" ? "person.crop.circle.fill" : "person.crop.circle")
                 }

@@ -39,7 +39,7 @@ struct ProfileView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
-                Text("我的")
+                Text("Me")
                     .font(.headline)
                     .foregroundStyle(Color("BobaBrown"))
             }
@@ -65,10 +65,10 @@ struct ProfileView: View {
             VStack(alignment: .leading, spacing: 14) {
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("会员")
+                        Text("Member")
                             .font(.caption)
                             .foregroundStyle(.white.opacity(0.7))
-                        Text(customer?.nickname ?? "未注册")
+                        Text(customer?.nickname ?? "Not registered")
                             .font(.title3.bold())
                             .foregroundStyle(.white)
                     }
@@ -82,7 +82,7 @@ struct ProfileView: View {
 
                 HStack {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("总积分")
+                        Text("Total Points")
                             .font(.caption2)
                             .foregroundStyle(.white.opacity(0.7))
                         Text("\(customer?.totalPoints ?? 0)")
@@ -91,7 +91,7 @@ struct ProfileView: View {
                     }
                     Spacer()
                     VStack(alignment: .trailing, spacing: 2) {
-                        Text("加入时间")
+                        Text("Member Since")
                             .font(.caption2)
                             .foregroundStyle(.white.opacity(0.7))
                         Text(customer?.joinedAt.formatted(.dateTime.year().month().day()) ?? "—")
@@ -113,12 +113,12 @@ struct ProfileView: View {
             HStack(spacing: 6) {
                 Image(systemName: "gift.fill")
                     .foregroundStyle(Color("BobaPink"))
-                Text("生日福利")
+                Text("Birthday Perk")
                     .font(.subheadline.bold())
                     .foregroundStyle(Color("BobaBrown"))
                 Spacer()
                 if hasBirthday {
-                    Text("已设置")
+                    Text("Set")
                         .font(.caption2)
                         .foregroundStyle(.white)
                         .padding(.horizontal, 8)
@@ -128,7 +128,7 @@ struct ProfileView: View {
             }
 
             DatePicker(
-                "我的生日",
+                "My Birthday",
                 selection: $birthday,
                 displayedComponents: .date
             )
@@ -138,7 +138,7 @@ struct ProfileView: View {
             Button {
                 saveBirthday()
             } label: {
-                Text(hasBirthday ? "更新生日" : "保存并领取生日券")
+                Text(hasBirthday ? "Update Birthday" : "Save & Claim Birthday Coupon")
                     .font(.subheadline.bold())
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity, minHeight: 44)
@@ -146,7 +146,7 @@ struct ProfileView: View {
             }
             .buttonStyle(.plain)
 
-            Text("生日前 7 天自动派发一张专属生日券")
+            Text("Auto-issues an exclusive birthday coupon 7 days before your birthday")
                 .font(.caption2)
                 .foregroundStyle(.secondary)
         }
@@ -158,11 +158,11 @@ struct ProfileView: View {
 
     private var actionCards: some View {
         VStack(spacing: 0) {
-            actionRow(icon: "ticket.fill", title: "我的优惠券", value: "\(activeCouponsCount) 张可用")
+            actionRow(icon: "ticket.fill", title: "My Coupons", value: "\(activeCouponsCount) available")
             Divider().padding(.leading, 52)
-            actionRow(icon: "clock.arrow.circlepath", title: "消费记录", value: "查看历史订单")
+            actionRow(icon: "clock.arrow.circlepath", title: "Order History", value: "View past orders")
             Divider().padding(.leading, 52)
-            actionRow(icon: "questionmark.circle", title: "联系商家", value: nil)
+            actionRow(icon: "questionmark.circle", title: "Contact Store", value: nil)
         }
         .background(Color.white, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
     }
@@ -206,9 +206,9 @@ struct ProfileView: View {
             withAnimation(.spring(duration: 0.4)) {
                 userRoleRaw = UserRole.unset.rawValue
             }
-            SWAlertManager.shared.show(.info, message: "已退出顾客端")
+            SWAlertManager.shared.show(.info, message: "Exited customer mode")
         } label: {
-            Label("切换角色", systemImage: "arrow.triangle.2.circlepath")
+            Label("Switch role", systemImage: "arrow.triangle.2.circlepath")
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
         }
@@ -233,17 +233,17 @@ struct ProfileView: View {
             if !alreadyIssued {
                 let coupon = Coupon(
                     kind: .birthday,
-                    title: "生日特饮免费券",
+                    title: "Free Birthday Drink",
                     discountValue: 22.0,
                     expiresAt: Calendar.current.date(byAdding: .day, value: 14, to: .now) ?? .now,
                     customerID: c.id.uuidString
                 )
                 modelContext.insert(coupon)
-                SWAlertManager.shared.show(.success, message: "生日快乐！已发券到账")
+                SWAlertManager.shared.show(.success, message: "Happy birthday! Coupon added to your account")
                 return
             }
         }
-        SWAlertManager.shared.show(.success, message: "生日已保存")
+        SWAlertManager.shared.show(.success, message: "Birthday saved")
     }
 
     /// Whether the birthday falls within the next 7 days (compared by month/day, ignoring year)

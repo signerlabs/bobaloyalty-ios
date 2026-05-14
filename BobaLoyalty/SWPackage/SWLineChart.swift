@@ -111,25 +111,25 @@ struct SWLineChart<CategoryType: Hashable & Plottable>: View {
             Chart {
                 ForEach(dataPoints) { point in
                     LineMark(
-                        x: .value("日期", point.date),
-                        y: .value("数值", point.value * animationProgress)
+                        x: .value("Date", point.date),
+                        y: .value("Value", point.value * animationProgress)
                     )
-                    .foregroundStyle(by: .value("分类", point.category))
+                    .foregroundStyle(by: .value("Category", point.category))
                     .interpolationMethod(interpolationMethod)
                     .lineStyle(StrokeStyle(lineWidth: 2))
 
                     if showPointMarkers {
                         PointMark(
-                            x: .value("日期", point.date),
-                            y: .value("数值", point.value * animationProgress)
+                            x: .value("Date", point.date),
+                            y: .value("Value", point.value * animationProgress)
                         )
-                        .foregroundStyle(by: .value("分类", point.category))
+                        .foregroundStyle(by: .value("Category", point.category))
                         .symbolSize(30)
                     }
                 }
 
                 ForEach(Array(referenceLines.enumerated()), id: \.offset) { _, line in
-                    RuleMark(y: .value("参考", line.value * animationProgress))
+                    RuleMark(y: .value("Reference", line.value * animationProgress))
                         .foregroundStyle(line.color)
                         .lineStyle(line.style)
                         .annotation(position: .top, alignment: .leading) {

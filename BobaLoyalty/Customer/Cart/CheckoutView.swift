@@ -51,7 +51,7 @@ struct CheckoutView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
-                Text("确认订单")
+                Text("Confirm Order")
                     .font(.headline)
                     .foregroundStyle(Color("BobaBrown"))
             }
@@ -67,7 +67,7 @@ struct CheckoutView: View {
 
     private var summaryCard: some View {
         VStack(alignment: .leading, spacing: 12) {
-            sectionHeader("订单明细", icon: "list.bullet.rectangle.portrait")
+            sectionHeader("Order Details", icon: "list.bullet.rectangle.portrait")
 
             VStack(spacing: 10) {
                 ForEach(cartItems) { item in
@@ -78,7 +78,7 @@ struct CheckoutView: View {
                             cornerRadius: 10
                         )
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(item.product?.name ?? "商品")
+                            Text(item.product?.name ?? "Item")
                                 .font(.subheadline.bold())
                                 .foregroundStyle(Color("BobaBrown"))
                             Text("\(item.size) · \(item.sugar)\(item.addons.isEmpty ? "" : " · " + item.addons.joined(separator: "/"))")
@@ -102,7 +102,7 @@ struct CheckoutView: View {
             Divider()
 
             HStack {
-                Text("合计 \(totalCups) 杯")
+                Text("Total \(totalCups) cups")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                 Spacer()
@@ -128,15 +128,15 @@ struct CheckoutView: View {
                 .font(.title2)
                 .foregroundStyle(Color("BobaCaramel"))
             VStack(alignment: .leading, spacing: 2) {
-                Text("本单可得")
+                Text("You'll earn")
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                Text("+\(pointsEarned) 积分")
+                Text("+\(pointsEarned) points")
                     .font(.subheadline.bold())
                     .foregroundStyle(Color("BobaBrown"))
             }
             Spacer()
-            Text("满 100 分免费一杯")
+            Text("100 pts = free cup")
                 .font(.caption2)
                 .foregroundStyle(Color("BobaCaramel"))
                 .padding(.horizontal, 10)
@@ -151,7 +151,7 @@ struct CheckoutView: View {
 
     private var paymentSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            sectionHeader("支付方式", icon: "creditcard.fill")
+            sectionHeader("Payment Method", icon: "creditcard.fill")
 
             VStack(spacing: 8) {
                 ForEach(PayMethod.allCases, id: \.self) { method in
@@ -209,7 +209,7 @@ struct CheckoutView: View {
         } label: {
             HStack {
                 Image(systemName: selectedPay.icon)
-                Text("立即支付 ¥\(String(format: "%.0f", totalAmount))")
+                Text("Pay Now ¥\(String(format: "%.0f", totalAmount))")
             }
             .font(.title3.bold())
             .frame(maxWidth: .infinity, minHeight: 54)
@@ -226,14 +226,14 @@ struct CheckoutView: View {
 
     private func payNow() {
         guard !cartItems.isEmpty else {
-            SWAlertManager.shared.show(.warning, message: "购物车为空")
+            SWAlertManager.shared.show(.warning, message: "Cart is empty")
             return
         }
 
         isPaying = true
         SWLoadingManager.shared.show(
             page: .checkout,
-            message: "\(selectedPay.displayName)支付中...",
+            message: "Paying with \(selectedPay.displayName)...",
             systemImage: selectedPay.icon
         )
 
@@ -249,7 +249,7 @@ struct CheckoutView: View {
         // 1. Convert each CartItem into an OrderLine embedded in the Order
         let lines = cartItems.map { ci in
             OrderLine(
-                productName: ci.product?.name ?? "商品",
+                productName: ci.product?.name ?? "Item",
                 size: ci.size,
                 sugar: ci.sugar,
                 addons: ci.addons,
@@ -264,7 +264,7 @@ struct CheckoutView: View {
         if let first = customers.first {
             customer = first
         } else {
-            let new = Customer(nickname: "奶茶达人 #\(Int.random(in: 1000...9999))")
+            let new = Customer(nickname: "Boba Fan #\(Int.random(in: 1000...9999))")
             modelContext.insert(new)
             customer = new
         }
@@ -289,7 +289,7 @@ struct CheckoutView: View {
 
         // 6. Wrap up
         SWLoadingManager.shared.hide(page: .checkout)
-        SWAlertManager.shared.show(.success, message: "支付成功 +\(pointsEarned) 积分")
+        SWAlertManager.shared.show(.success, message: "Paid · +\(pointsEarned) points")
         isPaying = false
         dismiss()
     }
@@ -316,8 +316,8 @@ private enum PayMethod: CaseIterable {
 
     var displayName: String {
         switch self {
-        case .wechat: "微信支付"
-        case .alipay: "支付宝"
+        case .wechat: "WeChat Pay"
+        case .alipay: "Alipay"
         }
     }
 

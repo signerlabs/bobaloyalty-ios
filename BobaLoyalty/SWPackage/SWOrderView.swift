@@ -27,8 +27,8 @@ struct SWOrderView: View {
     @Binding var sugar: String
     @Binding var size: String
 
-    var sugarOptions: [String] = ["无糖", "三分糖", "半糖", "全糖"]
-    var sizeOptions: [String] = ["中杯", "大杯", "超大"]
+    var sugarOptions: [String] = ["No Sugar", "30% Sweet", "Half Sweet", "Full Sweet"]
+    var sizeOptions: [String] = ["Medium", "Large", "XL"]
 
     @Namespace private var sizeNS
     @Namespace private var sugarNS
@@ -80,8 +80,8 @@ struct SWOrderView: View {
 
     private var selectorsSection: some View {
         VStack(spacing: 16) {
-            SWOrderSelector(items: sizeOptions, sel: $size, ns: sizeNS, label: "杯型")
-            SWOrderSelector(items: sugarOptions, sel: $sugar, ns: sugarNS, label: "糖度")
+            SWOrderSelector(items: sizeOptions, sel: $size, ns: sizeNS, label: "Size")
+            SWOrderSelector(items: sugarOptions, sel: $sugar, ns: sugarNS, label: "Sugar")
         }
     }
 }
@@ -97,9 +97,9 @@ struct SWCupView: View {
 
     private var cupHeight: CGFloat {
         switch size {
-        case "大杯":   return 280
-        case "超大":   return 320
-        default:      return 240
+        case "Large":   return 280
+        case "XL":      return 320
+        default:        return 240
         }
     }
 

@@ -59,7 +59,7 @@ enum OwnerActiveOrderSeed {
         now: Date
     ) -> [Order] {
         let calendar = Calendar.current
-        let addonChoices = ["珍珠", "椰果", "布丁", "芋圆"]
+        let addonChoices = ["Tapioca", "Coconut Jelly", "Pudding", "Taro Ball"]
 
         // 4 orders, with timestamps progressing from 18 minutes ago → 2 minutes ago
         let recipes: [(minutesAgo: Int, status: OrderStatus, cupCount: Int)] = [
@@ -76,10 +76,10 @@ enum OwnerActiveOrderSeed {
             var lines: [OrderLine] = []
             for j in 0..<recipe.cupCount {
                 let p = products[(i * 3 + j) % products.count]
-                let size = p.availableSizes.randomElement() ?? "中杯"
-                let sugar = p.availableSugar.randomElement() ?? "五分糖"
-                let unitPrice = size == "大杯" ? p.price + 3 : p.price
-                let addons: [String] = (j % 2 == 0) ? [addonChoices.randomElement() ?? "珍珠"] : []
+                let size = p.availableSizes.randomElement() ?? "Medium"
+                let sugar = p.availableSugar.randomElement() ?? "Half Sweet"
+                let unitPrice = size == "Large" ? p.price + 3 : p.price
+                let addons: [String] = (j % 2 == 0) ? [addonChoices.randomElement() ?? "Tapioca"] : []
                 lines.append(
                     OrderLine(
                         productName: p.name,

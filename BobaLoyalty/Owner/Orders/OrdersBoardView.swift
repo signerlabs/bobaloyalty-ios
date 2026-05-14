@@ -50,7 +50,7 @@ struct OrdersBoardView: View {
             .padding(.vertical, 12)
         }
         .background(Color("BobaCream").ignoresSafeArea())
-        .navigationTitle("订单")
+        .navigationTitle("Orders")
         .onAppear {
             // Inject demo data when today has no active orders, so the demo recording has action
             OwnerActiveOrderSeed.seedTodayActiveOrdersIfNeeded(in: modelContext)
@@ -62,21 +62,21 @@ struct OrdersBoardView: View {
     private var statsRow: some View {
         HStack(spacing: 12) {
             statCard(
-                title: "今日订单",
+                title: "Today's Orders",
                 value: "\(todayOrderCount)",
                 icon: "doc.text.fill",
                 tint: Color("BobaCaramel"),
                 bouncing: false
             )
             statCard(
-                title: "今日营收",
+                title: "Today's Revenue",
                 value: "¥\(Int(todayRevenue))",
                 icon: "yensign.circle.fill",
                 tint: Color("BobaMatcha"),
                 bouncing: false
             )
             statCard(
-                title: "待处理",
+                title: "Pending",
                 value: "\(pendingCount)",
                 icon: "bell.fill",
                 tint: pendingCount > 0 ? .red : Color("BobaPearl"),
@@ -127,11 +127,11 @@ struct OrdersBoardView: View {
     private var ordersList: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("订单流水")
+                Text("Order Stream")
                     .font(.headline)
                     .foregroundStyle(Color("BobaBrown"))
                 Spacer()
-                Text("共 \(orders.count) 单")
+                Text("\(orders.count) total")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -139,9 +139,9 @@ struct OrdersBoardView: View {
 
             if orders.isEmpty {
                 ContentUnavailableView(
-                    "暂无订单",
+                    "No orders yet",
                     systemImage: "tray",
-                    description: Text("顾客下单后会实时出现在这里")
+                    description: Text("Customer orders will appear here in real time")
                 )
                 .frame(minHeight: 240)
             } else {

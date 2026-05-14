@@ -21,7 +21,7 @@ struct OwnerRootTabView: View {
                 }
             } label: {
                 Label {
-                    Text("订单")
+                    Text("Orders")
                 } icon: {
                     Image(systemName: selectedTab == "orders" ? "list.bullet.clipboard.fill" : "list.bullet.clipboard")
                 }
@@ -35,7 +35,7 @@ struct OwnerRootTabView: View {
                 }
             } label: {
                 Label {
-                    Text("菜单")
+                    Text("Menu")
                 } icon: {
                     Image(systemName: selectedTab == "menu" ? "square.grid.2x2.fill" : "square.grid.2x2")
                 }
@@ -49,7 +49,7 @@ struct OwnerRootTabView: View {
                 }
             } label: {
                 Label {
-                    Text("营收")
+                    Text("Revenue")
                 } icon: {
                     Image(systemName: selectedTab == "revenue" ? "chart.line.uptrend.xyaxis.circle.fill" : "chart.line.uptrend.xyaxis.circle")
                 }
@@ -63,7 +63,7 @@ struct OwnerRootTabView: View {
                 }
             } label: {
                 Label {
-                    Text("设置")
+                    Text("Settings")
                 } icon: {
                     Image(systemName: selectedTab == "settings" ? "gearshape.fill" : "gearshape")
                 }

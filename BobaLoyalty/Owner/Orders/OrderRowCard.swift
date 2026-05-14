@@ -12,7 +12,7 @@ import SwiftUI
 struct OrderRowCard: View {
     let order: Order
 
-    /// Item summary: aggregates by product name + cup count, e.g. "招牌奶茶 ×2, 抹茶拿铁 ×1"
+    /// Item summary: aggregates by product name + cup count, e.g. "Signature Milk Tea ×2, Matcha Latte ×1"
     private var itemsSummary: String {
         // Aggregate quantities by product name
         let grouped = Dictionary(grouping: order.items, by: \.productName)
@@ -63,7 +63,7 @@ struct OrderRowCard: View {
                     .font(.title3)
                     .fontWeight(.bold)
                     .foregroundStyle(Color("BobaCaramel"))
-                Text("\(order.totalCups) 杯")
+                Text("\(order.totalCups) cups")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }
@@ -76,18 +76,18 @@ struct OrderRowCard: View {
 #Preview("Row Card — Pending & Completed") {
     let sampleLines: [OrderLine] = [
         OrderLine(
-            productName: "招牌奶茶",
-            size: "大杯",
-            sugar: "五分糖",
-            addons: ["珍珠"],
+            productName: "Signature Milk Tea",
+            size: "Large",
+            sugar: "Half Sweet",
+            addons: ["Tapioca"],
             quantity: 2,
             unitPrice: 19,
             imageName: "Drink_NaiCha"
         ),
         OrderLine(
-            productName: "抹茶拿铁",
-            size: "中杯",
-            sugar: "三分糖",
+            productName: "Matcha Latte",
+            size: "Medium",
+            sugar: "30% Sweet",
             quantity: 1,
             unitPrice: 18,
             imageName: "Drink_MoCha"

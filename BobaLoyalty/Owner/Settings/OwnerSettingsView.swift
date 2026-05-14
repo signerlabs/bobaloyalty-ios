@@ -14,7 +14,7 @@ import SwiftData
 
 struct OwnerSettingsView: View {
     @AppStorage(AppStorageKey.userRole) private var userRoleRaw: String = UserRole.unset.rawValue
-    @AppStorage("storeName") private var storeName: String = "微茶 · 望京店"
+    @AppStorage("storeName") private var storeName: String = "WeiBoba · Wangjing"
     @AppStorage("openHours") private var openHours: String = "10:00 - 22:00"
 
     @Environment(\.modelContext) private var modelContext
@@ -31,21 +31,21 @@ struct OwnerSettingsView: View {
     var body: some View {
         Form {
             // MARK: Store
-            Section("门店") {
-                LabeledContent("门店名称") {
-                    TextField("门店名称", text: $storeName)
+            Section("Store") {
+                LabeledContent("Store name") {
+                    TextField("Store name", text: $storeName)
                         .multilineTextAlignment(.trailing)
                         .foregroundStyle(.secondary)
                 }
-                LabeledContent("营业时间") {
-                    TextField("营业时间", text: $openHours)
+                LabeledContent("Hours") {
+                    TextField("Hours", text: $openHours)
                         .multilineTextAlignment(.trailing)
                         .foregroundStyle(.secondary)
                 }
                 HStack {
                     Image(systemName: "person.2.fill")
                         .foregroundStyle(Color("BobaPink"))
-                    Text("当前会员数")
+                    Text("Members")
                     Spacer()
                     Text("\(customers.count)")
                         .foregroundStyle(.secondary)
@@ -53,12 +53,12 @@ struct OwnerSettingsView: View {
             }
 
             // MARK: Member ops
-            Section("会员运营") {
+            Section("Member ops") {
                 Button {
                     showingPromoSheet = true
                 } label: {
                     Label {
-                        Text("群发促销券")
+                        Text("Send promo coupon")
                             .foregroundStyle(.primary)
                     } icon: {
                         Image(systemName: "ticket.fill")
@@ -69,77 +69,77 @@ struct OwnerSettingsView: View {
                 Button(role: .destructive) {
                     showingResetConfirm = true
                 } label: {
-                    Label("重置 Mock 数据", systemImage: "arrow.counterclockwise")
+                    Label("Reset Mock Data", systemImage: "arrow.counterclockwise")
                 }
             }
 
             // MARK: Account
-            Section("账号") {
-                LabeledContent("登录方式") {
+            Section("Account") {
+                LabeledContent("Sign-in") {
                     HStack(spacing: 6) {
                         Image(systemName: "applelogo")
                         Text("Apple ID")
                     }
                     .foregroundStyle(.secondary)
                 }
-                LabeledContent("账号") {
+                LabeledContent("Account") {
                     Text("****@signerlabs.com")
                         .foregroundStyle(.secondary)
                 }
             }
 
             // MARK: Misc
-            Section("其他") {
-                LabeledContent("版本号") {
+            Section("More") {
+                LabeledContent("Version") {
                     Text(appVersion)
                         .foregroundStyle(.secondary)
                 }
                 NavigationLink {
                     aboutPage
                 } label: {
-                    Label("关于 BobaLoyalty", systemImage: "info.circle")
+                    Label("About BobaLoyalty", systemImage: "info.circle")
                 }
                 Button(role: .destructive) {
                     showingRoleSwitchConfirm = true
                 } label: {
-                    Label("切换角色", systemImage: "arrow.triangle.2.circlepath")
+                    Label("Switch role", systemImage: "arrow.triangle.2.circlepath")
                 }
             }
         }
         .scrollContentBackground(.hidden)
         .background(Color("BobaCream").ignoresSafeArea())
-        .navigationTitle("设置")
+        .navigationTitle("Settings")
         // Broadcast-coupon sheet
         .sheet(isPresented: $showingPromoSheet) {
             SWAddSheet(
                 isPresented: $showingPromoSheet,
-                title: "群发促销券",
-                placeHolderText: "输入券面额（元），例如 5",
+                title: "Send promo coupon",
+                placeHolderText: "Enter face value (¥), e.g. 5",
                 minLines: 1
             ) { input in
                 broadcastPromo(amountText: input)
             }
         }
         // Reset-data confirmation
-        .alert("重置 Mock 数据", isPresented: $showingResetConfirm) {
-            Button("取消", role: .cancel) {}
-            Button("确认重置", role: .destructive) {
+        .alert("Reset Mock Data", isPresented: $showingResetConfirm) {
+            Button("Cancel", role: .cancel) {}
+            Button("Reset", role: .destructive) {
                 resetMockData()
             }
         } message: {
-            Text("将清空所有商品、订单、会员、优惠券，并重新灌入种子数据。")
+            Text("This will wipe all products, orders, members and coupons, then re-seed.")
         }
         // Switch-role confirmation
-        .alert("切换角色", isPresented: $showingRoleSwitchConfirm) {
-            Button("取消", role: .cancel) {}
-            Button("退出老板端", role: .destructive) {
+        .alert("Switch role", isPresented: $showingRoleSwitchConfirm) {
+            Button("Cancel", role: .cancel) {}
+            Button("Exit owner mode", role: .destructive) {
                 withAnimation(.spring(duration: 0.4)) {
                     userRoleRaw = UserRole.unset.rawValue
                 }
-                SWAlertManager.shared.show(.info, message: "已退出老板端")
+                SWAlertManager.shared.show(.info, message: "Exited owner mode")
             }
         } message: {
-            Text("退出后将回到角色选择页。")
+            Text("You'll return to the role selector.")
         }
     }
 
@@ -148,11 +148,11 @@ struct OwnerSettingsView: View {
     private func broadcastPromo(amountText: String) {
         let trimmed = amountText.trimmingCharacters(in: .whitespaces)
         guard let amount = Double(trimmed), amount > 0 else {
-            SWAlertManager.shared.show(.error, message: "面额无效")
+            SWAlertManager.shared.show(.error, message: "Invalid amount")
             return
         }
         guard !customers.isEmpty else {
-            SWAlertManager.shared.show(.warning, message: "暂无会员")
+            SWAlertManager.shared.show(.warning, message: "No members yet")
             return
         }
 
@@ -160,14 +160,14 @@ struct OwnerSettingsView: View {
         for c in customers {
             let coupon = Coupon(
                 kind: .promo,
-                title: "全场满 \(Int(amount * 4)) 减 \(Int(amount)) 元",
+                title: "¥\(Int(amount)) off orders over ¥\(Int(amount * 4))",
                 discountValue: amount,
                 expiresAt: expires,
                 customerID: c.id.uuidString
             )
             modelContext.insert(coupon)
         }
-        SWAlertManager.shared.show(.success, message: "已发券给 \(customers.count) 位会员")
+        SWAlertManager.shared.show(.success, message: "Sent to \(customers.count) members")
     }
 
     // MARK: - Reset mock data
@@ -185,9 +185,9 @@ struct OwnerSettingsView: View {
             // Re-seed mock data
             MockSeed.seedIfNeeded(in: modelContext)
 
-            SWAlertManager.shared.show(.success, message: "Mock 数据已重置")
+            SWAlertManager.shared.show(.success, message: "Mock data reset")
         } catch {
-            SWAlertManager.shared.show(.error, message: "重置失败：\(error.localizedDescription)")
+            SWAlertManager.shared.show(.error, message: "Reset failed: \(error.localizedDescription)")
         }
     }
 
@@ -202,7 +202,7 @@ struct OwnerSettingsView: View {
                 .font(.title)
                 .fontWeight(.bold)
                 .foregroundStyle(Color("BobaBrown"))
-            Text("Vibe Coding 一个奶茶店点单 App\n· ShipSwift 视频录屏 Demo ·")
+            Text("Vibe Coding a bubble tea ordering app\n· ShipSwift demo recording ·")
                 .font(.subheadline)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
@@ -212,7 +212,7 @@ struct OwnerSettingsView: View {
         .padding(.horizontal, 24)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color("BobaCream").ignoresSafeArea())
-        .navigationTitle("关于")
+        .navigationTitle("About")
         .navigationBarTitleDisplayMode(.inline)
     }
 

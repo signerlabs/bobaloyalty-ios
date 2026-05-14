@@ -36,7 +36,7 @@ struct CartView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
-                Text("购物车")
+                Text("Cart")
                     .font(.headline)
                     .foregroundStyle(Color("BobaBrown"))
             }
@@ -52,9 +52,9 @@ struct CartView: View {
 
     private var emptyState: some View {
         ContentUnavailableView {
-            Label("购物车空空如也", systemImage: "bag")
+            Label("Your cart is empty", systemImage: "bag")
         } description: {
-            Text("去菜单看看，挑一杯喜欢的奶茶吧")
+            Text("Head to the menu and pick a drink you'll love")
         }
     }
 
@@ -79,7 +79,7 @@ struct CartView: View {
     private var checkoutBar: some View {
         HStack(spacing: 12) {
             VStack(alignment: .leading, spacing: 2) {
-                Text("合计")
+                Text("Total")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 HStack(alignment: .firstTextBaseline, spacing: 2) {
@@ -98,7 +98,7 @@ struct CartView: View {
             NavigationLink {
                 CheckoutView()
             } label: {
-                Text("去结算 · \(totalCups) 杯")
+                Text("Checkout · \(totalCups) cups")
                     .font(.headline)
                     .foregroundStyle(.white)
                     .padding(.horizontal, 24)
@@ -118,7 +118,7 @@ struct CartView: View {
         for index in offsets {
             modelContext.delete(cartItems[index])
         }
-        SWAlertManager.shared.show(.info, message: "已移除")
+        SWAlertManager.shared.show(.info, message: "Removed")
     }
 }
 
@@ -128,7 +128,7 @@ private struct CartRow: View {
     @Bindable var item: CartItem
 
     private var displayName: String {
-        item.product?.name ?? "已下架商品"
+        item.product?.name ?? "Unlisted item"
     }
 
     private var displayImage: String {

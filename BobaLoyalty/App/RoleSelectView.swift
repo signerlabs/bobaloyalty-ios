@@ -35,7 +35,7 @@ struct RoleSelectView: View {
                         .font(.system(size: 42, weight: .heavy, design: .rounded))
                         .foregroundStyle(Color("BobaBrown"))
 
-                    Text("一杯奶茶，一份心意")
+                    Text("One cup of boba, one little kindness")
                         .font(.subheadline)
                         .foregroundStyle(Color("BobaBrown").opacity(0.75))
                 }
@@ -46,8 +46,8 @@ struct RoleSelectView: View {
                 VStack(spacing: 16) {
                     roleButton(
                         role: .customer,
-                        title: "我是顾客",
-                        subtitle: "扫码点单 · 攒积分 · 收生日券",
+                        title: "I'm a customer",
+                        subtitle: "Scan to order · Earn points · Get birthday coupons",
                         icon: "person.fill",
                         background: Color("BobaBrown"),
                         foreground: Color("BobaPearl")
@@ -55,8 +55,8 @@ struct RoleSelectView: View {
 
                     roleButton(
                         role: .owner,
-                        title: "我是老板",
-                        subtitle: "管菜单 · 看营收 · 群发券",
+                        title: "I'm the owner",
+                        subtitle: "Manage menu · Track revenue · Send promos",
                         icon: "storefront.fill",
                         background: Color("BobaPearl"),
                         foreground: Color("BobaBrown")
@@ -86,7 +86,7 @@ struct RoleSelectView: View {
             }
             SWAlertManager.shared.show(
                 .success,
-                message: role == .customer ? "欢迎光临，请慢慢挑选" : "老板，今日生意兴隆"
+                message: role == .customer ? "Welcome, take your time" : "Hey boss, here's to a great day"
             )
         } label: {
             HStack(spacing: 16) {

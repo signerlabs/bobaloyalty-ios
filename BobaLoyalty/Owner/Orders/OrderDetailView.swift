@@ -23,7 +23,7 @@ struct OrderDetailView: View {
 
                 // MARK: Item details
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("商品明细")
+                    Text("Items")
                         .font(.headline)
                         .foregroundStyle(Color("BobaBrown"))
 
@@ -54,7 +54,7 @@ struct OrderDetailView: View {
             .padding()
         }
         .background(Color("BobaCream").ignoresSafeArea())
-        .navigationTitle("订单 #\(String(order.id.uuidString.suffix(4)))")
+        .navigationTitle("Order #\(String(order.id.uuidString.suffix(4)))")
         .navigationBarTitleDisplayMode(.inline)
     }
 
@@ -73,7 +73,7 @@ struct OrderDetailView: View {
                 Image(systemName: "person.fill")
                     .font(.caption)
                     .foregroundStyle(Color("BobaCaramel"))
-                Text("会员 \(String(order.customerID.suffix(6)))")
+                Text("Member \(String(order.customerID.suffix(6)))")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
@@ -114,7 +114,7 @@ struct OrderDetailView: View {
                 .foregroundStyle(.secondary)
 
                 if !line.addons.isEmpty {
-                    Text("加料：" + line.addons.joined(separator: " / "))
+                    Text("Add-ons: " + line.addons.joined(separator: " / "))
                         .font(.caption2)
                         .foregroundStyle(Color("BobaCaramel"))
                 }
@@ -140,15 +140,15 @@ struct OrderDetailView: View {
     private var summaryCard: some View {
         VStack(spacing: 10) {
             HStack {
-                Text("总杯数")
+                Text("Total cups")
                 Spacer()
-                Text("\(order.totalCups) 杯")
+                Text("\(order.totalCups) cups")
             }
             .font(.footnote)
             .foregroundStyle(.secondary)
 
             HStack {
-                Text("本单积分")
+                Text("Points earned")
                 Spacer()
                 Text("+\(order.pointsEarned)")
                     .foregroundStyle(Color("BobaMatcha"))
@@ -158,7 +158,7 @@ struct OrderDetailView: View {
             Divider()
 
             HStack {
-                Text("合计")
+                Text("Total")
                     .font(.headline)
                 Spacer()
                 Text("¥\(order.totalAmount, specifier: "%.0f")")
@@ -180,21 +180,21 @@ struct OrderDetailView: View {
     private var actionButtons: some View {
         switch order.status {
         case .pending:
-            primaryActionButton(title: "开始制作", icon: "play.fill") {
-                advance(to: .making, message: "已开始制作")
+            primaryActionButton(title: "Start making", icon: "play.fill") {
+                advance(to: .making, message: "Started making")
             }
         case .making:
-            primaryActionButton(title: "出餐完成", icon: "checkmark.circle.fill") {
-                advance(to: .ready, message: "已出餐，等待自取")
+            primaryActionButton(title: "Ready for pickup", icon: "checkmark.circle.fill") {
+                advance(to: .ready, message: "Ready, waiting for pickup")
             }
         case .ready:
-            primaryActionButton(title: "顾客已取走", icon: "hand.thumbsup.fill") {
-                advance(to: .completed, message: "订单完成")
+            primaryActionButton(title: "Picked up", icon: "hand.thumbsup.fill") {
+                advance(to: .completed, message: "Order completed")
             }
         case .completed:
             HStack {
                 Image(systemName: "checkmark.seal.fill")
-                Text("订单已完成")
+                Text("Order completed")
             }
             .foregroundStyle(.secondary)
             .frame(maxWidth: .infinity)
@@ -202,7 +202,7 @@ struct OrderDetailView: View {
         case .cancelled:
             HStack {
                 Image(systemName: "xmark.seal.fill")
-                Text("订单已取消")
+                Text("Order cancelled")
             }
             .foregroundStyle(.red)
             .frame(maxWidth: .infinity)
@@ -246,18 +246,18 @@ struct OrderDetailView: View {
         createdAt: Calendar.current.date(byAdding: .minute, value: -8, to: .now) ?? .now,
         items: [
             OrderLine(
-                productName: "招牌奶茶",
-                size: "大杯",
-                sugar: "五分糖",
-                addons: ["珍珠", "椰果"],
+                productName: "Signature Milk Tea",
+                size: "Large",
+                sugar: "Half Sweet",
+                addons: ["Tapioca", "Coconut Jelly"],
                 quantity: 2,
                 unitPrice: 19,
                 imageName: "Drink_NaiCha"
             ),
             OrderLine(
-                productName: "杨枝甘露",
-                size: "中杯",
-                sugar: "三分糖",
+                productName: "Mango Pomelo Sago",
+                size: "Medium",
+                sugar: "30% Sweet",
                 quantity: 1,
                 unitPrice: 22,
                 imageName: "Drink_YangZhi"

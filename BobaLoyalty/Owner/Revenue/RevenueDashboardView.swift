@@ -89,7 +89,7 @@ struct RevenueDashboardView: View {
             return SWBarChart<String>.DataPoint(
                 date: dayStart,
                 value: total,
-                category: "营收"
+                category: "Revenue"
             )
         }
     }
@@ -107,7 +107,7 @@ struct RevenueDashboardView: View {
             return SWLineChart<String>.DataPoint(
                 date: dayStart,
                 value: Double(count),
-                category: "订单数"
+                category: "Orders"
             )
         }
     }
@@ -146,10 +146,10 @@ struct RevenueDashboardView: View {
                 kpiGrid
 
                 // Three charts
-                chartCard(title: "近 7 天营收") {
+                chartCard(title: "Revenue · Last 7 Days") {
                     SWBarChart(
                         dataPoints: last7DaysRevenue,
-                        colorMapping: ["营收": Color("BobaCaramel")],
+                        colorMapping: ["Revenue": Color("BobaCaramel")],
                         showValueLabels: true,
                         barCornerRadius: 6,
                         visibleDays: 7,
@@ -157,14 +157,14 @@ struct RevenueDashboardView: View {
                     )
                 }
 
-                chartCard(title: "近 30 天订单趋势") {
+                chartCard(title: "Orders · Last 30 Days") {
                     SWLineChart(
                         dataPoints: last30DaysOrderCount,
-                        colorMapping: ["订单数": Color("BobaMatcha")],
+                        colorMapping: ["Orders": Color("BobaMatcha")],
                         referenceLines: [
                             .init(
                                 value: avgDailyOrderCount,
-                                label: "日均 \(String(format: "%.1f", avgDailyOrderCount))",
+                                label: "Daily avg \(String(format: "%.1f", avgDailyOrderCount))",
                                 color: Color("BobaPink")
                             )
                         ],
@@ -175,7 +175,7 @@ struct RevenueDashboardView: View {
                     )
                 }
 
-                chartCard(title: "商品销量占比") {
+                chartCard(title: "Product Mix") {
                     SWDonutChart(
                         subjects: productMixSubjects,
                         selectedCategory: $selectedProductName
@@ -187,7 +187,7 @@ struct RevenueDashboardView: View {
             .padding(.horizontal, 14)
         }
         .background(Color("BobaCream").ignoresSafeArea())
-        .navigationTitle("营收看板")
+        .navigationTitle("Revenue Dashboard")
     }
 
     // MARK: - Top KPI grid
@@ -199,32 +199,32 @@ struct RevenueDashboardView: View {
         ]
         return LazyVGrid(columns: columns, spacing: 12) {
             kpiCard(
-                title: "今日营收",
+                title: "Today's Revenue",
                 value: "¥\(Int(todayRevenue))",
                 icon: "yensign.circle.fill",
                 tint: Color("BobaCaramel"),
                 trailing: deltaTag(todayDeltaPercent)
             )
             kpiCard(
-                title: "今日杯数",
+                title: "Today's Cups",
                 value: "\(todayCups)",
                 icon: "cup.and.saucer.fill",
                 tint: Color("BobaBrown"),
-                trailing: AnyView(unitTag("杯"))
+                trailing: AnyView(unitTag("cups"))
             )
             kpiCard(
-                title: "本月营收",
+                title: "Month Revenue",
                 value: "¥\(Int(monthRevenue))",
                 icon: "calendar",
                 tint: Color("BobaMatcha"),
                 trailing: AnyView(monthRangeTag())
             )
             kpiCard(
-                title: "本月新增会员",
+                title: "New Members This Month",
                 value: "\(monthlyNewMembers)",
                 icon: "person.2.fill",
                 tint: Color("BobaPink"),
-                trailing: AnyView(unitTag("人"))
+                trailing: AnyView(unitTag("people"))
             )
         }
     }
@@ -270,7 +270,7 @@ struct RevenueDashboardView: View {
     private func deltaTag(_ delta: Double?) -> AnyView {
         guard let delta else {
             return AnyView(
-                Text("昨日无数据")
+                Text("No data yesterday")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             )
@@ -280,7 +280,7 @@ struct RevenueDashboardView: View {
             HStack(spacing: 4) {
                 Image(systemName: isUp ? "arrow.up.right" : "arrow.down.right")
                     .font(.caption2)
-                Text(String(format: "%@%.1f%% vs 昨日", isUp ? "+" : "", delta))
+                Text(String(format: "%@%.1f%% vs yesterday", isUp ? "+" : "", delta))
                     .font(.caption2)
             }
             .foregroundStyle(isUp ? Color("BobaMatcha") : .red)
@@ -288,15 +288,15 @@ struct RevenueDashboardView: View {
     }
 
     private func unitTag(_ unit: String) -> some View {
-        Text("单位：\(unit)")
+        Text("Unit: \(unit)")
             .font(.caption2)
             .foregroundStyle(.secondary)
     }
 
     private func monthRangeTag() -> some View {
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "zh_CN")
-        formatter.dateFormat = "M月起"
+        formatter.locale = Locale(identifier: "en_US")
+        formatter.dateFormat = "'Since' MMM"
         return Text(formatter.string(from: startOfThisMonth))
             .font(.caption2)
             .foregroundStyle(.secondary)

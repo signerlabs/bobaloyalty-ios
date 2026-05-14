@@ -36,7 +36,7 @@ enum MockSeed {
             // 5. One unredeemed promo coupon
             let promo = Coupon(
                 kind: .promo,
-                title: "招牌奶茶 -5 元",
+                title: "Signature Milk Tea -¥5",
                 discountValue: 5.0,
                 expiresAt: Calendar.current.date(byAdding: .day, value: 14, to: .now) ?? .now,
                 customerID: customer.id.uuidString
@@ -54,53 +54,53 @@ enum MockSeed {
     private static func seedProducts() -> [Product] {
         [
             Product(
-                name: "招牌奶茶",
-                categoryName: "招牌",
+                name: "Signature Milk Tea",
+                categoryName: "Signature",
                 price: 16,
                 imageName: "Drink_NaiCha",
                 isOnSale: true
             ),
             Product(
-                name: "珍珠奶茶",
-                categoryName: "奶茶系列",
+                name: "Tapioca Milk Tea",
+                categoryName: "Milk Tea",
                 price: 14,
                 imageName: "Drink_ZhenZhu",
                 isOnSale: true
             ),
             Product(
-                name: "抹茶拿铁",
-                categoryName: "奶茶系列",
+                name: "Matcha Latte",
+                categoryName: "Milk Tea",
                 price: 18,
                 imageName: "Drink_MoCha"
             ),
             Product(
-                name: "茉莉奶绿",
-                categoryName: "奶茶系列",
+                name: "Jasmine Milk Green",
+                categoryName: "Milk Tea",
                 price: 15,
                 imageName: "Drink_MoLi"
             ),
             Product(
-                name: "芋圆奶茶",
-                categoryName: "奶茶系列",
+                name: "Taro Ball Milk Tea",
+                categoryName: "Milk Tea",
                 price: 19,
                 imageName: "Drink_YuYuan"
             ),
             Product(
-                name: "烤奶",
-                categoryName: "奶茶系列",
+                name: "Roasted Milk Tea",
+                categoryName: "Milk Tea",
                 price: 17,
                 imageName: "Drink_KaoNai"
             ),
             Product(
-                name: "杨枝甘露",
-                categoryName: "果茶系列",
+                name: "Mango Pomelo Sago",
+                categoryName: "Fruit Tea",
                 price: 22,
                 imageName: "Drink_YangZhi",
                 isOnSale: true
             ),
             Product(
-                name: "柠檬果茶",
-                categoryName: "果茶系列",
+                name: "Lemon Fruit Tea",
+                categoryName: "Fruit Tea",
                 price: 16,
                 imageName: "Drink_NingMeng"
             )
@@ -110,7 +110,7 @@ enum MockSeed {
     // MARK: - Anonymous member
 
     private static func seedCustomer() -> Customer {
-        let nickname = "奶茶达人 #\(Int.random(in: 1000...9999))"
+        let nickname = "Boba Fan #\(Int.random(in: 1000...9999))"
         return Customer(
             nickname: nickname,
             totalPoints: 0,
@@ -150,7 +150,7 @@ enum MockSeed {
         customer: Customer
     ) -> [Order] {
         let calendar = Calendar.current
-        let addonChoices = ["珍珠", "椰果", "布丁", "芋圆", "燕麦"]
+        let addonChoices = ["Tapioca", "Coconut Jelly", "Pudding", "Taro Ball", "Oats"]
         var orders: [Order] = []
 
         for dayOffset in 0..<30 {
@@ -172,11 +172,11 @@ enum MockSeed {
                 var lines: [OrderLine] = []
                 for _ in 0..<cupCount {
                     guard let p = products.randomElement() else { continue }
-                    let size = p.availableSizes.randomElement() ?? "中杯"
-                    let sugar = p.availableSugar.randomElement() ?? "五分糖"
-                    let unitPrice = size == "大杯" ? p.price + 3 : p.price
+                    let size = p.availableSizes.randomElement() ?? "Medium"
+                    let sugar = p.availableSugar.randomElement() ?? "Half Sweet"
+                    let unitPrice = size == "Large" ? p.price + 3 : p.price
                     let addons = Bool.random()
-                        ? [addonChoices.randomElement() ?? "珍珠"]
+                        ? [addonChoices.randomElement() ?? "Tapioca"]
                         : []
                     lines.append(
                         OrderLine(

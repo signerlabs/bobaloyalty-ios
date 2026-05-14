@@ -20,26 +20,26 @@ struct ProductDetailView: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var qty: Int = 1
-    @State private var selectedSize: String = "中杯"
-    @State private var selectedSugar: String = "五分糖"
+    @State private var selectedSize: String = "Medium"
+    @State private var selectedSugar: String = "Half Sweet"
     @State private var selectedAddons: Set<String> = []
 
     /// Add-on options (name + extra price)
     private let addonOptions: [(String, Double)] = [
-        ("椰果", 2),
-        ("珍珠", 3),
-        ("布丁", 4),
-        ("燕麦", 2),
-        ("芋圆", 4)
+        ("Coconut Jelly", 2),
+        ("Tapioca", 3),
+        ("Pudding", 4),
+        ("Oats", 2),
+        ("Taro Ball", 4)
     ]
 
     /// Unit price for the currently selected size (large +3, extra-large +6)
     private var unitPrice: Double {
         let sizeUp: Double = {
             switch selectedSize {
-            case "大杯":   return 3
-            case "超大":   return 6
-            default:      return 0
+            case "Large":   return 3
+            case "XL":      return 6
+            default:        return 0
             }
         }()
         let addonUp = addonOptions
@@ -66,8 +66,8 @@ struct ProductDetailView: View {
                 qty: $qty,
                 sugar: $selectedSugar,
                 size: $selectedSize,
-                sugarOptions: product.availableSugar.isEmpty ? ["无糖", "三分糖", "半糖", "全糖"] : product.availableSugar,
-                sizeOptions: product.availableSizes.isEmpty ? ["中杯", "大杯", "超大"] : product.availableSizes
+                sugarOptions: product.availableSugar.isEmpty ? ["No Sugar", "30% Sweet", "Half Sweet", "Full Sweet"] : product.availableSugar,
+                sizeOptions: product.availableSizes.isEmpty ? ["Medium", "Large", "XL"] : product.availableSizes
             )
             .frame(maxHeight: .infinity)
             .overlay(alignment: .top) {
@@ -121,7 +121,7 @@ struct ProductDetailView: View {
 
     private var addonsSection: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("加料")
+            Text("Add-ons")
                 .font(.subheadline.bold())
                 .foregroundStyle(.white.opacity(0.9))
                 .padding(.horizontal, 20)
@@ -181,7 +181,7 @@ struct ProductDetailView: View {
         } label: {
             HStack {
                 Image(systemName: "bag.badge.plus")
-                Text("加入购物车 ¥\(Int(totalPrice))")
+                Text("Add to Cart ¥\(Int(totalPrice))")
                     .contentTransition(.numericText())
             }
             .font(.title3.bold())
@@ -208,7 +208,7 @@ struct ProductDetailView: View {
             unitPrice: unitPrice
         )
         modelContext.insert(item)
-        SWAlertManager.shared.show(.success, message: "已加入购物车")
+        SWAlertManager.shared.show(.success, message: "Added to cart")
 
         // After adding, dismiss back to the menu so the user can keep browsing
         dismiss()
@@ -219,8 +219,8 @@ struct ProductDetailView: View {
     NavigationStack {
         ProductDetailView(
             product: Product(
-                name: "招牌奶茶",
-                categoryName: "招牌",
+                name: "Signature Milk Tea",
+                categoryName: "Signature",
                 price: 16,
                 imageName: "Drink_NaiCha",
                 isOnSale: true

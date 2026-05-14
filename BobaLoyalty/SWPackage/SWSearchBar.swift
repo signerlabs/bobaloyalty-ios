@@ -13,7 +13,7 @@ struct SWSearchBar: View {
     /// Two-way binding to the current search text
     @Binding var text: String
     /// Placeholder text when the input is empty
-    var placeholder: String = "搜索"
+    var placeholder: String = "Search"
 
     var body: some View {
         HStack(spacing: 8) {

@@ -17,8 +17,8 @@ enum CouponKind: String, Codable, CaseIterable {
 
     var displayName: String {
         switch self {
-        case .birthday: "生日券"
-        case .promo:    "促销券"
+        case .birthday: "Birthday"
+        case .promo:    "Promo"
         }
     }
 

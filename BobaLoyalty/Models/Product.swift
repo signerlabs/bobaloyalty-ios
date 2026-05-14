@@ -37,8 +37,8 @@ final class Product {
         categoryName: String,
         price: Double,
         imageName: String,
-        availableSizes: [String] = ["中杯", "大杯"],
-        availableSugar: [String] = ["无糖", "三分糖", "五分糖", "七分糖", "全糖"],
+        availableSizes: [String] = ["Medium", "Large"],
+        availableSugar: [String] = ["No Sugar", "30% Sweet", "Half Sweet", "70% Sweet", "Full Sweet"],
         isOnSale: Bool = false,
         createdAt: Date = .now
     ) {

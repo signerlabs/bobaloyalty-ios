@@ -12,7 +12,7 @@ import SwiftData
 @Model
 final class Customer {
     @Attribute(.unique) var id: UUID
-    /// Nickname (anonymous members display as "奶茶达人 #1234")
+    /// Nickname (anonymous members display as "Boba Fan #1234")
     var nickname: String
     /// Phone number (optional, nil means anonymous member)
     var phone: String?

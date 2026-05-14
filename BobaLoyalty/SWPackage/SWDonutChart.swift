@@ -66,9 +66,9 @@ struct SWDonutChart: View {
 
     private func displayName(for categoryName: String) -> String {
         if categoryName == Self.noCategoryKey {
-            return "未分类"
+            return "Uncategorized"
         } else if categoryName.isEmpty {
-            return "未命名"
+            return "Unnamed"
         }
         return categoryName
     }
@@ -91,7 +91,7 @@ struct SWDonutChart: View {
 
     private var selectedDisplayName: String {
         guard let selected = selectedCategory else {
-            return "全部"
+            return "All"
         }
         return displayName(for: selected)
     }
@@ -104,13 +104,13 @@ struct SWDonutChart: View {
                 Chart(categoryData) { item in
                     let isSelected = selectedCategory == item.name
                     SectorMark(
-                        angle: .value("数量", item.count),
+                        angle: .value("Count", item.count),
                         innerRadius: .ratio(0.6),
                         outerRadius: .ratio(isSelected ? 1.0 : 0.9),
                         angularInset: isSelected ? 2 : 1
                     )
                     .cornerRadius(6)
-                    .foregroundStyle(by: .value("分类", displayName(for: item.name)))
+                    .foregroundStyle(by: .value("Category", displayName(for: item.name)))
                     .opacity(selectedCategory == nil || isSelected ? 1.0 : 0.3)
                 }
                 .chartLegend(position: .trailing, alignment: .center, spacing: 16)

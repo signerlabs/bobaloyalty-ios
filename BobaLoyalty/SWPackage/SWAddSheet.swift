@@ -14,8 +14,8 @@ struct SWAddSheet: View {
     @Binding var isPresented: Bool
     @State private var inputText = ""
 
-    var title: LocalizedStringKey = "请输入"
-    var placeHolderText: LocalizedStringKey = "在此输入..."
+    var title: LocalizedStringKey = "Enter text"
+    var placeHolderText: LocalizedStringKey = "Type here..."
     var minLines: Int = 5
     var onConfirm: ((String) -> Void)?
 
@@ -40,7 +40,7 @@ struct SWAddSheet: View {
                 Button {
                     isPresented = false
                 } label: {
-                    Text("取消")
+                    Text("Cancel")
                 }
                 .buttonStyle(.bordered)
 
@@ -48,7 +48,7 @@ struct SWAddSheet: View {
                     onConfirm?(inputText)
                     isPresented = false
                 } label: {
-                    Text("确认")
+                    Text("Confirm")
                 }
                 .buttonStyle(.borderedProminent)
                 .disabled(inputText.isEmpty)
@@ -63,7 +63,7 @@ struct SWAddSheet: View {
 
     private struct InputField: View {
         @Binding var text: String
-        var placeHolderText: LocalizedStringKey = "输入消息..."
+        var placeHolderText: LocalizedStringKey = "Type a message..."
         var minLines: Int = 1
 
         @FocusState private var isFocused: Bool
